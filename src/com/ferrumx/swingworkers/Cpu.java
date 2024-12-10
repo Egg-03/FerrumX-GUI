@@ -157,6 +157,5 @@ class CpuActionListener extends SwingWorker<Map<String, String>, Void>{
 			e.printStackTrace();
 			Thread.currentThread().interrupt();
 		}
-	}
-	
+	}	
 }
