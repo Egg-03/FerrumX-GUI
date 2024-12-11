@@ -7,11 +7,15 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/EggLaf.jar"/>
-	<classpathentry kind="lib" path="lib/FerrumX-core-v1.3.0.jar"/>
 	<classpathentry kind="lib" path="lib/flatlaf-3.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/flatlaf-extras-3.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/flatlaf-intellij-themes-3.5.1.jar"/>
 	<classpathentry kind="lib" path="lib/ini4j-0.5.4.jar"/>
 	<classpathentry kind="lib" path="lib/jsvg-1.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/FerrumX-core-v1.3.1.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/FerrumX-GUI/lib/FerrumX-doc-v1.3.1.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
