@@ -11,14 +11,9 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.RejectedExecutionException;
-import java.util.concurrent.TimeUnit;
-
+import java.util.List;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -47,12 +42,22 @@ import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.DefaultCaret;
 
+import com.ferrumx.swingworkers.Battery;
+import com.ferrumx.swingworkers.Cpu;
+import com.ferrumx.swingworkers.Gpu;
+import com.ferrumx.swingworkers.HardwareId;
+import com.ferrumx.swingworkers.Mainboard;
+import com.ferrumx.swingworkers.Memory;
+import com.ferrumx.swingworkers.Network;
+import com.ferrumx.swingworkers.OperatingSystem;
+import com.ferrumx.swingworkers.Storage;
+import com.ferrumx.swingworkers.TimeZone;
+import com.ferrumx.system.currentuser.User;
 import com.ferrumx.ui.report.DetailedReportGeneration;
 import com.ferrumx.ui.report.SummarizedReportGeneration;
 import com.ferrumx.ui.secondary.AboutUI;
 import com.ferrumx.ui.secondary.ConfirmationUI;
 import com.ferrumx.ui.secondary.ExceptionUI;
-import com.ferrumx.ui.secondary.StatusUI;
 import com.ferrumx.ui.utilities.ComponentImageCapture;
 import com.ferrumx.ui.utilities.DateTime;
 import com.ferrumx.ui.utilities.Elevation;
@@ -64,144 +69,54 @@ import javax.swing.border.LineBorder;
 public class FerrumX {
 
 	private JFrame mainFrame;
+	
 	// HWID
 	private JTextField hwidTf;
+	
 	// CPU
-	private JLabel cpuLogo; // contains logo or img
-	private JComboBox<String> cpuChoice;
-	private JTextField cpuCoreTf;
-	private JTextField cpuThreadTf;
-	private JTextField cpuLogicProcessorTf;
-	private JTextField cpuNameTf;
-	private JTextField addressWidthTf;
-	private JTextField cpuSocketTf;
-	private JTextField cpuManufacturerTf;
-	private JTextField cpuBaseClockTf;
-	private JTextField multiplierTf;
-	private JTextField effectiveClockTf;
-	private JTextField cpuVersionTf;
-	private JTextField cpuCaptionTf;
-	private JTextField cpuFamilyTf;
-	private JTextField cpuSteppingTf;
-	private JTextField cpuVirtStatusTf;
-	private JTextField cpuIdTf;
-	private JTextField cpuL2Tf;
-	private JTextField cpuL3Tf;
+	private JLabel cpuLogo; // contains logo or image
+	private JComboBox<String> cpuChoiceComboBox;
 	private JTextArea cacheTa;
+	private List<JTextField> cpuFields = new ArrayList<>();
+	
 	// Memory
 	private JComboBox<String> memorySlotChoice;
-	private JTextField memoryNameTf;
-	private JTextField memoryManufacturerTf;
-	private JTextField memoryModelTf;
-	private JTextField memoryOtherInfoTf;
-	private JTextField memoryPartNumberTf;
-	private JTextField memoryFormFactorTf;
-	private JTextField memoryBankLabelTf;
-	private JTextField memoryCapacityTf;
-	private JTextField memoryWidthTf;
-	private JTextField memorySpeedTf;
-	private JTextField memoryConfigClockSpeedTf;
-	private JTextField memoryLocatorTf;
-	private JTextField memorySerialNumberTf;
-	// Mainboard
-	private JTextField mbManufacturerTf;
-	private JTextField mbModelTf;
-	private JTextField mbProductTf;
-	private JTextField mbSerialNumberTf;
-	private JTextField mbVersionTf;
-	private JTextField mbPnpTf;
-	private JTextField biosNameTf;
-	private JTextField biosCaptionTf;
-	private JTextField biosManufacturerTf;
-	private JTextField biosReleaseDateTf;
-	private JTextField biosVersionTf;
-	private JTextField biosStatusTf;
-	private JTextField smbiosPresenceTf;
-	private JTextField smbiosVersionTf;
-	private JTextField biosLanguageTf;
+	private List<JTextField> memoryFields = new ArrayList<>();
+	
+	// Mainboard and BIOS
+	private List<JTextField> mainboardFields = new ArrayList<>();
+	
 	// GPU
 	private JLabel gpuLogo; // contains logo or image
 	private JComboBox<String> gpuChoiceComboBox;
-	private JTextField gpuNameTf;
-	private JTextField gpuPnpTf;
-	private JTextField gpuHorizontalResTf;
-	private JTextField gpuVerticalResTf;
-	private JTextField gpuBitsTf;
-	private JTextField gpuMinRefTf;
-	private JTextField gpuMaxRefTf;
-	private JTextField gpuCurrentRefTf;
-	private JTextField gpuDACTf;
-	private JTextField gpuVramTf;
-	private JTextField gpuDriverVersionTf;
-	private JTextField gpuDriverDateTf;
-	private JTextField gpuVideoProcessorTf;
+	private List<JTextField> gpuFields = new ArrayList<>();
+	
 	// Network
 	private JComboBox<String> netConnectionChoiceBox;
-	private JTextField netNameTf;
-	private JTextField netPnpTf;
-	private JTextField netMacTf;
-	private JTextField netConnectIdTf;
-	private JTextField netIpStatusTf;
-	private JTextField netIPAddressTf;
-	private JTextField netIPSubnetTf;
-	private JTextField netGatewayTf;
-	private JTextField netDHCPStatusTf;
-	private JTextField netDHCPServerTf;
-	private JTextField netDNSHostTf;
-	private JTextField netDNSServerTf;
+	private List<JTextField> networkFields = new ArrayList<>();
+	
 	// Disk
 	private JComboBox<String> diskIndexChoiceBox;
-	private JTextField diskCaptionTf;
-	private JTextField diskModelTf;
-	private JTextField diskSizeTf;
-	private JTextField firmwareRevisionTf;
-	private JTextField diskSerialNumberTf;
-	private JTextField diskPartitionsTf;
-	private JTextField diskStatusTf;
-	private JTextField diskInterfaceTf;
-	private JTextArea diskPartTa;
+	private JTextArea partitionArea;
+	private List<JTextField> storageFields = new ArrayList<>();
+	
 	// OS
 	private JLabel osCoverImg; // contains logo or img
 	private JComboBox<String> currentOsChoiceBox;
-	private JTextField osCaptionTf;
-	private JTextField osVersionTf;
-	private JTextField osManufacturerTf;
-	private JTextField osArchitectureTf;
-	private JTextField osBuildNumberTf;
-	private JTextField osInstallDateTf;
-	private JTextField osLastBootTf;
-	private JTextField osSerialTf;
-	private JTextField osPrimaryTf;
-	private JTextField osDistributedTf;
-	private JTextField osPortTf;
-	private JTextField osDeviceNameTf;
-	private JTextField osUserCountTf;
-	private JTextField osRegUserTf;
-	private JTextField osLangTf;
-	private JTextField osSysDriveTf;
-	private JTextField osWinDirTf;
-	private JTextField osSysDirTf;
-	// User and Time zone
-	private JTextField userTf;
-	private JTextField userHomeTf;
-	private JTextField timeZoneNameTf;
-	private JTextField timeZoneCaptionTf;
+	private List<JTextField> osFields = new ArrayList<>();
+	
+	// Time-Zone
+	private List<JTextField> timeZoneFields = new ArrayList<>();
+	
 	// Battery
-	private JLabel batteryChargeView; //the icon representing the current charge level on the battery
+	private JLabel batteryChargeIcon; // the icon representing the current charge level on the battery
 	private JLabel batteryChargePercentage; // the charge percentage on the battery icon panel
-	private JTextField batteryCaptionTf;
-	private JTextField batteryStatusTf;
-	private JTextField batteryStatusTwoTf;
-	private JTextField batteryChemistryTf;
-	private JTextField batteryChargeTf;
-	private JTextField batteryRuntimeTf;
-	private JTextField batteryNameTf;
-	private JTextField batteryDeviceIDTf;
-	private JTextField batteryCapcityTf;
-	private JTextField batteryVoltageTf;
+	private List<JTextField> batteryFields = new ArrayList<>();
 
 	// Links
 	private String appLatestReleasePage = "https://github.com/Egg-03/FerrumX/releases/latest";
+
+	
 	
 	
 	/**
@@ -223,6 +138,7 @@ public class FerrumX {
 			FerrumX window = new FerrumX();
 			window.mainFrame.setVisible(true);
 		} catch (Exception e) {
+			e.printStackTrace();
 			String message = e.getMessage();
 			String stackTrace = Arrays.toString(e.getStackTrace());
 			new ExceptionUI("FerrumX Application Window Launch Error", "Error: "+message+"\nStackTrace: \n"+stackTrace).setVisible(true);
@@ -234,7 +150,7 @@ public class FerrumX {
 	 */
 	public FerrumX() {
 		initializeComponents();
-		initializeSystemInfo(new StatusUI("Booting Up", "Please wait till FerrumX gathers information about your system"));
+		initializeSystemInfo();
 	}
 
 	// changes theme on the fly with application open
@@ -442,7 +358,8 @@ public class FerrumX {
 		about.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/menu_icons/about.svg")));
 		about.addActionListener(e -> new AboutUI().setVisible(true));
 		helpMenu.add(about);
-
+		
+		//TODO change update links
 		JMenuItem updateCheck = new JMenuItem("Check For New Releases");
 		updateCheck.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/menu_icons/release.svg")));
 		updateCheck.addActionListener(e -> {
@@ -552,14 +469,14 @@ public class FerrumX {
 		gbc_cpuCount.gridy = 0;
 		essentialInfoPanel.add(cpuCount, gbc_cpuCount);
 
-		cpuChoice = new JComboBox<>();
+		cpuChoiceComboBox = new JComboBox<>();
 		GridBagConstraints gbc_cpuChoice = new GridBagConstraints();
 		gbc_cpuChoice.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuChoice.insets = new Insets(0, 0, 5, 5);
 		gbc_cpuChoice.gridx = 1;
 		gbc_cpuChoice.gridy = 0;
-		essentialInfoPanel.add(cpuChoice, gbc_cpuChoice);
-		cpuChoice.setEditable(false);
+		essentialInfoPanel.add(cpuChoiceComboBox, gbc_cpuChoice);
+		cpuChoiceComboBox.setEditable(false);
 
 		JLabel cpuName = new JLabel("Name");
 		GridBagConstraints gbc_cpuName = new GridBagConstraints();
@@ -568,7 +485,7 @@ public class FerrumX {
 		gbc_cpuName.gridy = 0;
 		essentialInfoPanel.add(cpuName, gbc_cpuName);
 
-		cpuNameTf = new JTextField();
+		JTextField cpuNameTf = new JTextField();
 		GridBagConstraints gbc_cpuNameTf = new GridBagConstraints();
 		gbc_cpuNameTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuNameTf.gridwidth = 3;
@@ -586,7 +503,7 @@ public class FerrumX {
 		gbc_cpuCores.gridy = 1;
 		essentialInfoPanel.add(cpuCores, gbc_cpuCores);
 
-		cpuCoreTf = new JTextField();
+		JTextField cpuCoreTf = new JTextField();
 		GridBagConstraints gbc_cpuCoreTf = new GridBagConstraints();
 		gbc_cpuCoreTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuCoreTf.insets = new Insets(0, 0, 5, 5);
@@ -603,7 +520,7 @@ public class FerrumX {
 		gbc_cpuThreads.gridy = 1;
 		essentialInfoPanel.add(cpuThreads, gbc_cpuThreads);
 
-		cpuThreadTf = new JTextField();
+		JTextField cpuThreadTf = new JTextField();
 		GridBagConstraints gbc_cpuThreadTf = new GridBagConstraints();
 		gbc_cpuThreadTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuThreadTf.insets = new Insets(0, 0, 5, 5);
@@ -620,7 +537,7 @@ public class FerrumX {
 		gbc_cpuLogicalProcessors.gridy = 1;
 		essentialInfoPanel.add(cpuLogicalProcessors, gbc_cpuLogicalProcessors);
 
-		cpuLogicProcessorTf = new JTextField();
+		JTextField cpuLogicProcessorTf = new JTextField();
 		GridBagConstraints gbc_cpuLogicProcessorTf = new GridBagConstraints();
 		gbc_cpuLogicProcessorTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuLogicProcessorTf.insets = new Insets(0, 0, 5, 0);
@@ -637,7 +554,7 @@ public class FerrumX {
 		gbc_addressWidth.gridy = 2;
 		essentialInfoPanel.add(addressWidth, gbc_addressWidth);
 
-		addressWidthTf = new JTextField();
+		JTextField addressWidthTf = new JTextField();
 		GridBagConstraints gbc_addressWidthTf = new GridBagConstraints();
 		gbc_addressWidthTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_addressWidthTf.insets = new Insets(0, 0, 0, 5);
@@ -654,7 +571,7 @@ public class FerrumX {
 		gbc_cpuSocket.gridy = 2;
 		essentialInfoPanel.add(cpuSocket, gbc_cpuSocket);
 
-		cpuSocketTf = new JTextField();
+		JTextField cpuSocketTf = new JTextField();
 		GridBagConstraints gbc_cpuSocketTf = new GridBagConstraints();
 		gbc_cpuSocketTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuSocketTf.insets = new Insets(0, 0, 0, 5);
@@ -671,7 +588,7 @@ public class FerrumX {
 		gbc_cpuManufacturer.gridy = 2;
 		essentialInfoPanel.add(cpuManufacturer, gbc_cpuManufacturer);
 
-		cpuManufacturerTf = new JTextField();
+		JTextField cpuManufacturerTf = new JTextField();
 		GridBagConstraints gbc_cpuManufacturerTf = new GridBagConstraints();
 		gbc_cpuManufacturerTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuManufacturerTf.gridx = 5;
@@ -712,7 +629,7 @@ public class FerrumX {
 		gbc_cpuExtClock.gridy = 0;
 		clockPanel.add(cpuExtClock, gbc_cpuExtClock);
 
-		cpuBaseClockTf = new JTextField();
+		JTextField cpuBaseClockTf = new JTextField();
 		GridBagConstraints gbc_cpuBaseClockTf = new GridBagConstraints();
 		gbc_cpuBaseClockTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuBaseClockTf.insets = new Insets(0, 0, 0, 5);
@@ -729,7 +646,7 @@ public class FerrumX {
 		gbc_cpuMultiplier.gridy = 0;
 		clockPanel.add(cpuMultiplier, gbc_cpuMultiplier);
 
-		multiplierTf = new JTextField();
+		JTextField multiplierTf = new JTextField();
 		GridBagConstraints gbc_multiplierTf = new GridBagConstraints();
 		gbc_multiplierTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_multiplierTf.insets = new Insets(0, 0, 0, 5);
@@ -746,7 +663,7 @@ public class FerrumX {
 		gbc_cpuEffectiveClock.gridy = 0;
 		clockPanel.add(cpuEffectiveClock, gbc_cpuEffectiveClock);
 
-		effectiveClockTf = new JTextField();
+		JTextField effectiveClockTf = new JTextField();
 		GridBagConstraints gbc_effectiveClockTf = new GridBagConstraints();
 		gbc_effectiveClockTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_effectiveClockTf.gridx = 5;
@@ -787,7 +704,7 @@ public class FerrumX {
 		gbc_cpuVersion.gridy = 0;
 		familyPanel.add(cpuVersion, gbc_cpuVersion);
 
-		cpuVersionTf = new JTextField();
+		JTextField cpuVersionTf = new JTextField();
 		GridBagConstraints gbc_cpuVersionTf = new GridBagConstraints();
 		gbc_cpuVersionTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuVersionTf.insets = new Insets(0, 0, 5, 5);
@@ -804,7 +721,7 @@ public class FerrumX {
 		gbc_cpuFamily.gridy = 0;
 		familyPanel.add(cpuFamily, gbc_cpuFamily);
 
-		cpuFamilyTf = new JTextField();
+		JTextField cpuFamilyTf = new JTextField();
 		GridBagConstraints gbc_cpuFamilyTf = new GridBagConstraints();
 		gbc_cpuFamilyTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuFamilyTf.insets = new Insets(0, 0, 5, 5);
@@ -821,7 +738,7 @@ public class FerrumX {
 		gbc_cpuVirtStatus.gridy = 0;
 		familyPanel.add(cpuVirtStatus, gbc_cpuVirtStatus);
 
-		cpuVirtStatusTf = new JTextField();
+		JTextField cpuVirtStatusTf = new JTextField();
 		GridBagConstraints gbc_cpuVirtStatusTf = new GridBagConstraints();
 		gbc_cpuVirtStatusTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuVirtStatusTf.insets = new Insets(0, 0, 5, 0);
@@ -838,7 +755,7 @@ public class FerrumX {
 		gbc_cpuCaption.gridy = 1;
 		familyPanel.add(cpuCaption, gbc_cpuCaption);
 
-		cpuCaptionTf = new JTextField();
+		JTextField cpuCaptionTf = new JTextField();
 		GridBagConstraints gbc_cpuCaptionTf = new GridBagConstraints();
 		gbc_cpuCaptionTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuCaptionTf.insets = new Insets(0, 0, 0, 5);
@@ -855,7 +772,7 @@ public class FerrumX {
 		gbc_cpuStepping.gridy = 1;
 		familyPanel.add(cpuStepping, gbc_cpuStepping);
 
-		cpuSteppingTf = new JTextField();
+		JTextField cpuSteppingTf = new JTextField();
 		GridBagConstraints gbc_cpuSteppingTf = new GridBagConstraints();
 		gbc_cpuSteppingTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuSteppingTf.insets = new Insets(0, 0, 0, 5);
@@ -872,7 +789,7 @@ public class FerrumX {
 		gbc_cpuId.gridy = 1;
 		familyPanel.add(cpuId, gbc_cpuId);
 
-		cpuIdTf = new JTextField();
+		JTextField cpuIdTf = new JTextField();
 		GridBagConstraints gbc_cpuIdTf = new GridBagConstraints();
 		gbc_cpuIdTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuIdTf.gridx = 5;
@@ -913,7 +830,7 @@ public class FerrumX {
 		gbc_cpuLevelTwoCache.gridy = 0;
 		miniCachePanel.add(cpuLevelTwoCache, gbc_cpuLevelTwoCache);
 
-		cpuL2Tf = new JTextField();
+		JTextField cpuL2Tf = new JTextField();
 		GridBagConstraints gbc_cpuL2Tf = new GridBagConstraints();
 		gbc_cpuL2Tf.anchor = GridBagConstraints.SOUTH;
 		gbc_cpuL2Tf.fill = GridBagConstraints.HORIZONTAL;
@@ -934,7 +851,7 @@ public class FerrumX {
 		miniCachePanel.add(cpuLevelThreeCache, gbc_cpuLevelThreeCache);
 		cpuLevelThreeCache.setHorizontalAlignment(SwingConstants.CENTER);
 
-		cpuL3Tf = new JTextField();
+		JTextField cpuL3Tf = new JTextField();
 		GridBagConstraints gbc_cpuL3Tf = new GridBagConstraints();
 		gbc_cpuL3Tf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_cpuL3Tf.insets = new Insets(0, 0, 5, 0);
@@ -975,6 +892,10 @@ public class FerrumX {
 		cacheTa = new JTextArea();
 		cacheScrollPane.setViewportView(cacheTa);
 		cacheTa.setEditable(false);
+		
+		cpuFields.addAll(List.of(cpuNameTf, cpuCoreTf, cpuThreadTf, cpuLogicProcessorTf, cpuManufacturerTf,
+				addressWidthTf, cpuSocketTf, cpuBaseClockTf, multiplierTf, effectiveClockTf, cpuVersionTf, cpuCaptionTf,
+				cpuFamilyTf, cpuSteppingTf, cpuVirtStatusTf, cpuIdTf, cpuL2Tf, cpuL3Tf));
 	}
 
 	private void initializeMemoryPanel(JTabbedPane tabbedPane, JPanel memoryPanel) {
@@ -1030,7 +951,7 @@ public class FerrumX {
 		gbc_memoryName.gridy = 1;
 		memoryIdentifierPanel.add(memoryName, gbc_memoryName);
 
-		memoryNameTf = new JTextField();
+		JTextField memoryNameTf = new JTextField();
 		GridBagConstraints gbc_memoryNameTf = new GridBagConstraints();
 		gbc_memoryNameTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memoryNameTf.insets = new Insets(0, 0, 5, 0);
@@ -1048,7 +969,7 @@ public class FerrumX {
 		gbc_memoryManufacturer.gridy = 2;
 		memoryIdentifierPanel.add(memoryManufacturer, gbc_memoryManufacturer);
 
-		memoryManufacturerTf = new JTextField();
+		JTextField memoryManufacturerTf = new JTextField();
 		GridBagConstraints gbc_memoryManufacturerTf = new GridBagConstraints();
 		gbc_memoryManufacturerTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memoryManufacturerTf.insets = new Insets(0, 0, 5, 0);
@@ -1066,7 +987,7 @@ public class FerrumX {
 		gbc_memoryModel.gridy = 3;
 		memoryIdentifierPanel.add(memoryModel, gbc_memoryModel);
 
-		memoryModelTf = new JTextField();
+		JTextField memoryModelTf = new JTextField();
 		GridBagConstraints gbc_memoryModelTf = new GridBagConstraints();
 		gbc_memoryModelTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memoryModelTf.insets = new Insets(0, 0, 5, 0);
@@ -1084,7 +1005,7 @@ public class FerrumX {
 		gbc_memoryOtherInfo.gridy = 4;
 		memoryIdentifierPanel.add(memoryOtherInfo, gbc_memoryOtherInfo);
 
-		memoryOtherInfoTf = new JTextField();
+		JTextField memoryOtherInfoTf = new JTextField();
 		GridBagConstraints gbc_memoryOtherInfoTf = new GridBagConstraints();
 		gbc_memoryOtherInfoTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memoryOtherInfoTf.insets = new Insets(0, 0, 5, 0);
@@ -1102,7 +1023,7 @@ public class FerrumX {
 		gbc_memoryPartNumber.gridy = 5;
 		memoryIdentifierPanel.add(memoryPartNumber, gbc_memoryPartNumber);
 
-		memoryPartNumberTf = new JTextField();
+		JTextField memoryPartNumberTf = new JTextField();
 		GridBagConstraints gbc_memoryPartNumberTf = new GridBagConstraints();
 		gbc_memoryPartNumberTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memoryPartNumberTf.insets = new Insets(0, 0, 5, 0);
@@ -1120,7 +1041,7 @@ public class FerrumX {
 		gbc_memorySerialNumber.gridy = 6;
 		memoryIdentifierPanel.add(memorySerialNumber, gbc_memorySerialNumber);
 
-		memorySerialNumberTf = new JTextField();
+		JTextField memorySerialNumberTf = new JTextField();
 		GridBagConstraints gbc_memorySerialNumberTf = new GridBagConstraints();
 		gbc_memorySerialNumberTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memorySerialNumberTf.insets = new Insets(0, 0, 5, 0);
@@ -1138,7 +1059,7 @@ public class FerrumX {
 		gbc_memoryFormFactor.gridy = 7;
 		memoryIdentifierPanel.add(memoryFormFactor, gbc_memoryFormFactor);
 
-		memoryFormFactorTf = new JTextField();
+		JTextField memoryFormFactorTf = new JTextField();
 		GridBagConstraints gbc_memoryFormFactorTf = new GridBagConstraints();
 		gbc_memoryFormFactorTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memoryFormFactorTf.gridx = 1;
@@ -1170,7 +1091,7 @@ public class FerrumX {
 		gbc_memoryBankLabel.gridy = 0;
 		memoryPropertyPanel.add(memoryBankLabel, gbc_memoryBankLabel);
 
-		memoryBankLabelTf = new JTextField();
+		JTextField memoryBankLabelTf = new JTextField();
 		GridBagConstraints gbc_memoryBankLabelTf = new GridBagConstraints();
 		gbc_memoryBankLabelTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memoryBankLabelTf.insets = new Insets(0, 0, 5, 0);
@@ -1188,7 +1109,7 @@ public class FerrumX {
 		gbc_memoryCapacity.gridy = 1;
 		memoryPropertyPanel.add(memoryCapacity, gbc_memoryCapacity);
 
-		memoryCapacityTf = new JTextField();
+		JTextField memoryCapacityTf = new JTextField();
 		GridBagConstraints gbc_memoryCapacityTf = new GridBagConstraints();
 		gbc_memoryCapacityTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memoryCapacityTf.insets = new Insets(0, 0, 5, 0);
@@ -1206,7 +1127,7 @@ public class FerrumX {
 		gbc_memoryWidth.gridy = 2;
 		memoryPropertyPanel.add(memoryWidth, gbc_memoryWidth);
 
-		memoryWidthTf = new JTextField();
+		JTextField memoryWidthTf = new JTextField();
 		GridBagConstraints gbc_memoryWidthTf = new GridBagConstraints();
 		gbc_memoryWidthTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memoryWidthTf.insets = new Insets(0, 0, 5, 0);
@@ -1224,7 +1145,7 @@ public class FerrumX {
 		gbc_memorySpeed.gridy = 3;
 		memoryPropertyPanel.add(memorySpeed, gbc_memorySpeed);
 
-		memorySpeedTf = new JTextField();
+		JTextField memorySpeedTf = new JTextField();
 		GridBagConstraints gbc_memorySpeedTf = new GridBagConstraints();
 		gbc_memorySpeedTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memorySpeedTf.insets = new Insets(0, 0, 5, 0);
@@ -1242,7 +1163,7 @@ public class FerrumX {
 		gbc_memoryConfigClockSpeed.gridy = 4;
 		memoryPropertyPanel.add(memoryConfigClockSpeed, gbc_memoryConfigClockSpeed);
 
-		memoryConfigClockSpeedTf = new JTextField();
+		JTextField memoryConfigClockSpeedTf = new JTextField();
 		GridBagConstraints gbc_memoryConfigClockSpeedTf = new GridBagConstraints();
 		gbc_memoryConfigClockSpeedTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memoryConfigClockSpeedTf.insets = new Insets(0, 0, 5, 0);
@@ -1260,7 +1181,7 @@ public class FerrumX {
 		gbc_memoryLocator.gridy = 5;
 		memoryPropertyPanel.add(memoryLocator, gbc_memoryLocator);
 
-		memoryLocatorTf = new JTextField();
+		JTextField memoryLocatorTf = new JTextField();
 		GridBagConstraints gbc_memoryLocatorTf = new GridBagConstraints();
 		gbc_memoryLocatorTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_memoryLocatorTf.gridx = 1;
@@ -1268,6 +1189,10 @@ public class FerrumX {
 		memoryPropertyPanel.add(memoryLocatorTf, gbc_memoryLocatorTf);
 		memoryLocatorTf.setEditable(false);
 		memoryLocatorTf.setColumns(10);
+		
+		memoryFields.addAll(List.of(memoryNameTf, memoryManufacturerTf, memoryModelTf, memoryOtherInfoTf,
+				memoryPartNumberTf, memoryFormFactorTf, memoryBankLabelTf, memoryCapacityTf, memoryWidthTf,
+				memorySpeedTf, memoryConfigClockSpeedTf, memoryLocatorTf, memorySerialNumberTf));
 	}
 
 	private void initializeMainboardPanel(JTabbedPane tabbedPane, JPanel mainBoardPanel) {
@@ -1306,7 +1231,7 @@ public class FerrumX {
 		gbc_mbManufacturer.gridy = 0;
 		mainboardPanel.add(mbManufacturer, gbc_mbManufacturer);
 
-		mbManufacturerTf = new JTextField();
+		JTextField mbManufacturerTf = new JTextField();
 		mbManufacturerTf.setEditable(false);
 		GridBagConstraints gbc_mbManufacturerTf = new GridBagConstraints();
 		gbc_mbManufacturerTf.insets = new Insets(0, 0, 5, 0);
@@ -1324,7 +1249,7 @@ public class FerrumX {
 		gbc_mbModel.gridy = 1;
 		mainboardPanel.add(mbModel, gbc_mbModel);
 
-		mbModelTf = new JTextField();
+		JTextField mbModelTf = new JTextField();
 		mbModelTf.setEditable(false);
 		GridBagConstraints gbc_mbModelTf = new GridBagConstraints();
 		gbc_mbModelTf.insets = new Insets(0, 0, 5, 0);
@@ -1342,7 +1267,7 @@ public class FerrumX {
 		gbc_mbProduct.gridy = 2;
 		mainboardPanel.add(mbProduct, gbc_mbProduct);
 
-		mbProductTf = new JTextField();
+		JTextField mbProductTf = new JTextField();
 		mbProductTf.setEditable(false);
 		GridBagConstraints gbc_mbProductTf = new GridBagConstraints();
 		gbc_mbProductTf.insets = new Insets(0, 0, 5, 0);
@@ -1360,7 +1285,7 @@ public class FerrumX {
 		gbc_mbSerialNumber.gridy = 3;
 		mainboardPanel.add(mbSerialNumber, gbc_mbSerialNumber);
 
-		mbSerialNumberTf = new JTextField();
+		JTextField mbSerialNumberTf = new JTextField();
 		mbSerialNumberTf.setEditable(false);
 		GridBagConstraints gbc_mbSerialNumberTf = new GridBagConstraints();
 		gbc_mbSerialNumberTf.insets = new Insets(0, 0, 5, 0);
@@ -1378,7 +1303,7 @@ public class FerrumX {
 		gbc_mbVersion.gridy = 4;
 		mainboardPanel.add(mbVersion, gbc_mbVersion);
 
-		mbVersionTf = new JTextField();
+		JTextField mbVersionTf = new JTextField();
 		mbVersionTf.setEditable(false);
 		GridBagConstraints gbc_mbVersionTf = new GridBagConstraints();
 		gbc_mbVersionTf.insets = new Insets(0, 0, 5, 0);
@@ -1396,7 +1321,7 @@ public class FerrumX {
 		gbc_mbPnp.gridy = 5;
 		mainboardPanel.add(mbPnp, gbc_mbPnp);
 
-		mbPnpTf = new JTextField();
+		JTextField mbPnpTf = new JTextField();
 		mbPnpTf.setEditable(false);
 		GridBagConstraints gbc_mbPnpTf = new GridBagConstraints();
 		gbc_mbPnpTf.fill = GridBagConstraints.HORIZONTAL;
@@ -1428,7 +1353,7 @@ public class FerrumX {
 		gbc_biosName.gridy = 0;
 		biosPanel.add(biosName, gbc_biosName);
 
-		biosNameTf = new JTextField();
+		JTextField biosNameTf = new JTextField();
 		biosNameTf.setEditable(false);
 		GridBagConstraints gbc_biosNameTf = new GridBagConstraints();
 		gbc_biosNameTf.insets = new Insets(0, 0, 5, 0);
@@ -1446,7 +1371,7 @@ public class FerrumX {
 		gbc_biosCaption.gridy = 1;
 		biosPanel.add(biosCaption, gbc_biosCaption);
 
-		biosCaptionTf = new JTextField();
+		JTextField biosCaptionTf = new JTextField();
 		biosCaptionTf.setEditable(false);
 		GridBagConstraints gbc_biosCaptionTf = new GridBagConstraints();
 		gbc_biosCaptionTf.insets = new Insets(0, 0, 5, 0);
@@ -1464,7 +1389,7 @@ public class FerrumX {
 		gbc_biosManufacturer.gridy = 2;
 		biosPanel.add(biosManufacturer, gbc_biosManufacturer);
 
-		biosManufacturerTf = new JTextField();
+		JTextField biosManufacturerTf = new JTextField();
 		biosManufacturerTf.setEditable(false);
 		GridBagConstraints gbc_biosManufacturerTf = new GridBagConstraints();
 		gbc_biosManufacturerTf.insets = new Insets(0, 0, 5, 0);
@@ -1482,7 +1407,7 @@ public class FerrumX {
 		gbc_biosRelease.gridy = 3;
 		biosPanel.add(biosRelease, gbc_biosRelease);
 
-		biosReleaseDateTf = new JTextField();
+		JTextField biosReleaseDateTf = new JTextField();
 		biosReleaseDateTf.setEditable(false);
 		GridBagConstraints gbc_biosReleaseDateTf = new GridBagConstraints();
 		gbc_biosReleaseDateTf.insets = new Insets(0, 0, 5, 0);
@@ -1500,7 +1425,7 @@ public class FerrumX {
 		gbc_biosVersion.gridy = 4;
 		biosPanel.add(biosVersion, gbc_biosVersion);
 
-		biosVersionTf = new JTextField();
+		JTextField biosVersionTf = new JTextField();
 		biosVersionTf.setEditable(false);
 		GridBagConstraints gbc_biosVersionTf = new GridBagConstraints();
 		gbc_biosVersionTf.insets = new Insets(0, 0, 5, 0);
@@ -1518,7 +1443,7 @@ public class FerrumX {
 		gbc_biosStatus.gridy = 5;
 		biosPanel.add(biosStatus, gbc_biosStatus);
 
-		biosStatusTf = new JTextField();
+		JTextField biosStatusTf = new JTextField();
 		biosStatusTf.setEditable(false);
 		GridBagConstraints gbc_biosStatusTf = new GridBagConstraints();
 		gbc_biosStatusTf.insets = new Insets(0, 0, 5, 0);
@@ -1536,7 +1461,7 @@ public class FerrumX {
 		gbc_smbiosPresence.gridy = 6;
 		biosPanel.add(smbiosPresence, gbc_smbiosPresence);
 
-		smbiosPresenceTf = new JTextField();
+		JTextField smbiosPresenceTf = new JTextField();
 		smbiosPresenceTf.setEditable(false);
 		GridBagConstraints gbc_smbiosPresenceTf = new GridBagConstraints();
 		gbc_smbiosPresenceTf.insets = new Insets(0, 0, 5, 0);
@@ -1554,7 +1479,7 @@ public class FerrumX {
 		gbc_smbiosVersion.gridy = 7;
 		biosPanel.add(smbiosVersion, gbc_smbiosVersion);
 
-		smbiosVersionTf = new JTextField();
+		JTextField smbiosVersionTf = new JTextField();
 		smbiosVersionTf.setEditable(false);
 		GridBagConstraints gbc_smbiosVersionTf = new GridBagConstraints();
 		gbc_smbiosVersionTf.insets = new Insets(0, 0, 5, 0);
@@ -1572,7 +1497,7 @@ public class FerrumX {
 		gbc_biosLanguage.gridy = 8;
 		biosPanel.add(biosLanguage, gbc_biosLanguage);
 
-		biosLanguageTf = new JTextField();
+		JTextField biosLanguageTf = new JTextField();
 		biosLanguageTf.setEditable(false);
 		GridBagConstraints gbc_biosLanguageTf = new GridBagConstraints();
 		gbc_biosLanguageTf.fill = GridBagConstraints.HORIZONTAL;
@@ -1580,6 +1505,10 @@ public class FerrumX {
 		gbc_biosLanguageTf.gridy = 8;
 		biosPanel.add(biosLanguageTf, gbc_biosLanguageTf);
 		biosLanguageTf.setColumns(10);
+		
+		mainboardFields.addAll(List.of(mbManufacturerTf, mbModelTf, mbProductTf, mbSerialNumberTf, mbVersionTf, mbPnpTf,
+				biosNameTf, biosCaptionTf, biosManufacturerTf, biosReleaseDateTf, biosVersionTf, biosStatusTf,
+				smbiosPresenceTf, smbiosVersionTf, biosLanguageTf));
 	}
 
 	private void initializeGpuPanel(JTabbedPane tabbedPane, JPanel gpuPanel) {
@@ -1633,7 +1562,7 @@ public class FerrumX {
 		gbc_gpuName.gridy = 1;
 		gpuIdentifierPanel.add(gpuName, gbc_gpuName);
 
-		gpuNameTf = new JTextField();
+		JTextField gpuNameTf = new JTextField();
 		GridBagConstraints gbc_gpuNameTf = new GridBagConstraints();
 		gbc_gpuNameTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gpuNameTf.insets = new Insets(0, 0, 5, 5);
@@ -1666,7 +1595,7 @@ public class FerrumX {
 		gbc_gpuPnpId.gridy = 2;
 		gpuIdentifierPanel.add(gpuPnpId, gbc_gpuPnpId);
 
-		gpuPnpTf = new JTextField();
+		JTextField gpuPnpTf = new JTextField();
 		GridBagConstraints gbc_gpuPnpTf = new GridBagConstraints();
 		gbc_gpuPnpTf.insets = new Insets(0, 0, 0, 5);
 		gbc_gpuPnpTf.fill = GridBagConstraints.HORIZONTAL;
@@ -1706,7 +1635,7 @@ public class FerrumX {
 		gbc_gpuHorizontal.gridy = 0;
 		displayInfoPanel.add(gpuHorizontal, gbc_gpuHorizontal);
 
-		gpuHorizontalResTf = new JTextField();
+		JTextField gpuHorizontalResTf = new JTextField();
 		GridBagConstraints gbc_gpuHorizontalResTf = new GridBagConstraints();
 		gbc_gpuHorizontalResTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gpuHorizontalResTf.insets = new Insets(0, 0, 5, 0);
@@ -1724,7 +1653,7 @@ public class FerrumX {
 		gbc_gpuVertical.gridy = 1;
 		displayInfoPanel.add(gpuVertical, gbc_gpuVertical);
 
-		gpuVerticalResTf = new JTextField();
+		JTextField gpuVerticalResTf = new JTextField();
 		GridBagConstraints gbc_gpuVerticalResTf = new GridBagConstraints();
 		gbc_gpuVerticalResTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gpuVerticalResTf.insets = new Insets(0, 0, 5, 0);
@@ -1742,7 +1671,7 @@ public class FerrumX {
 		gbc_gpuBitsPerPixel.gridy = 2;
 		displayInfoPanel.add(gpuBitsPerPixel, gbc_gpuBitsPerPixel);
 
-		gpuBitsTf = new JTextField();
+		JTextField gpuBitsTf = new JTextField();
 		GridBagConstraints gbc_gpuBitsTf = new GridBagConstraints();
 		gbc_gpuBitsTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gpuBitsTf.insets = new Insets(0, 0, 5, 0);
@@ -1760,7 +1689,7 @@ public class FerrumX {
 		gbc_gpuMinRef.gridy = 3;
 		displayInfoPanel.add(gpuMinRef, gbc_gpuMinRef);
 
-		gpuMinRefTf = new JTextField();
+		JTextField gpuMinRefTf = new JTextField();
 		GridBagConstraints gbc_gpuMinRefTf = new GridBagConstraints();
 		gbc_gpuMinRefTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gpuMinRefTf.insets = new Insets(0, 0, 5, 0);
@@ -1778,7 +1707,7 @@ public class FerrumX {
 		gbc_gpuMaxRef.gridy = 4;
 		displayInfoPanel.add(gpuMaxRef, gbc_gpuMaxRef);
 
-		gpuMaxRefTf = new JTextField();
+		JTextField gpuMaxRefTf = new JTextField();
 		GridBagConstraints gbc_gpuMaxRefTf = new GridBagConstraints();
 		gbc_gpuMaxRefTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gpuMaxRefTf.insets = new Insets(0, 0, 5, 0);
@@ -1796,7 +1725,7 @@ public class FerrumX {
 		gbc_gpuCurrentRef.gridy = 5;
 		displayInfoPanel.add(gpuCurrentRef, gbc_gpuCurrentRef);
 
-		gpuCurrentRefTf = new JTextField();
+		JTextField gpuCurrentRefTf = new JTextField();
 		GridBagConstraints gbc_gpuCurrentRefTf = new GridBagConstraints();
 		gbc_gpuCurrentRefTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gpuCurrentRefTf.gridx = 1;
@@ -1835,7 +1764,7 @@ public class FerrumX {
 		gbc_gpuAdapterDACType.gridy = 0;
 		gpuVramAndDriverPanel.add(gpuAdapterDACType, gbc_gpuAdapterDACType);
 
-		gpuDACTf = new JTextField();
+		JTextField gpuDACTf = new JTextField();
 		GridBagConstraints gbc_gpuDACTf = new GridBagConstraints();
 		gbc_gpuDACTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gpuDACTf.insets = new Insets(0, 0, 5, 0);
@@ -1853,7 +1782,7 @@ public class FerrumX {
 		gbc_gpuVram.gridy = 1;
 		gpuVramAndDriverPanel.add(gpuVram, gbc_gpuVram);
 
-		gpuVramTf = new JTextField();
+		JTextField gpuVramTf = new JTextField();
 		GridBagConstraints gbc_gpuVramTf = new GridBagConstraints();
 		gbc_gpuVramTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gpuVramTf.insets = new Insets(0, 0, 5, 0);
@@ -1871,7 +1800,7 @@ public class FerrumX {
 		gbc_gpuDriverVersion.gridy = 2;
 		gpuVramAndDriverPanel.add(gpuDriverVersion, gbc_gpuDriverVersion);
 
-		gpuDriverVersionTf = new JTextField();
+		JTextField gpuDriverVersionTf = new JTextField();
 		GridBagConstraints gbc_gpuDriverVersionTf = new GridBagConstraints();
 		gbc_gpuDriverVersionTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gpuDriverVersionTf.insets = new Insets(0, 0, 5, 0);
@@ -1889,7 +1818,7 @@ public class FerrumX {
 		gbc_gpuDriverDate.gridy = 3;
 		gpuVramAndDriverPanel.add(gpuDriverDate, gbc_gpuDriverDate);
 
-		gpuDriverDateTf = new JTextField();
+		JTextField gpuDriverDateTf = new JTextField();
 		GridBagConstraints gbc_gpuDriverDateTf = new GridBagConstraints();
 		gbc_gpuDriverDateTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gpuDriverDateTf.insets = new Insets(0, 0, 5, 0);
@@ -1907,7 +1836,7 @@ public class FerrumX {
 		gbc_gpuProcessor.gridy = 4;
 		gpuVramAndDriverPanel.add(gpuProcessor, gbc_gpuProcessor);
 
-		gpuVideoProcessorTf = new JTextField();
+		JTextField gpuVideoProcessorTf = new JTextField();
 		GridBagConstraints gbc_gpuVideoProcessorTf = new GridBagConstraints();
 		gbc_gpuVideoProcessorTf.fill = GridBagConstraints.HORIZONTAL;
 		gbc_gpuVideoProcessorTf.gridx = 1;
@@ -1915,6 +1844,10 @@ public class FerrumX {
 		gpuVramAndDriverPanel.add(gpuVideoProcessorTf, gbc_gpuVideoProcessorTf);
 		gpuVideoProcessorTf.setEditable(false);
 		gpuVideoProcessorTf.setColumns(10);
+		
+		gpuFields.addAll(List.of(gpuNameTf, gpuPnpTf, gpuHorizontalResTf, gpuVerticalResTf, gpuBitsTf, gpuMinRefTf,
+				gpuMaxRefTf, gpuCurrentRefTf, gpuDACTf, gpuVramTf, gpuDriverVersionTf, gpuDriverDateTf,
+				gpuVideoProcessorTf));
 	}
 
 	private void initializeNetworkPanel(JTabbedPane tabbedPane, JPanel networkPanel) {
@@ -1968,7 +1901,7 @@ public class FerrumX {
 		gbc_netName.gridy = 1;
 		adapterPanel.add(netName, gbc_netName);
 
-		netNameTf = new JTextField();
+		JTextField netNameTf = new JTextField();
 		netNameTf.setEditable(false);
 		GridBagConstraints gbc_netNameTf = new GridBagConstraints();
 		gbc_netNameTf.gridwidth = 2;
@@ -1987,7 +1920,7 @@ public class FerrumX {
 		gbc_netPnp.gridy = 2;
 		adapterPanel.add(netPnp, gbc_netPnp);
 
-		netPnpTf = new JTextField();
+		JTextField netPnpTf = new JTextField();
 		netPnpTf.setEditable(false);
 		GridBagConstraints gbc_netPnpTf = new GridBagConstraints();
 		gbc_netPnpTf.gridwidth = 2;
@@ -2006,7 +1939,7 @@ public class FerrumX {
 		gbc_netMac.gridy = 3;
 		adapterPanel.add(netMac, gbc_netMac);
 
-		netMacTf = new JTextField();
+		JTextField netMacTf = new JTextField();
 		netMacTf.setEditable(false);
 		GridBagConstraints gbc_netMacTf = new GridBagConstraints();
 		gbc_netMacTf.gridwidth = 2;
@@ -2025,7 +1958,7 @@ public class FerrumX {
 		gbc_netConnectionId.gridy = 4;
 		adapterPanel.add(netConnectionId, gbc_netConnectionId);
 
-		netConnectIdTf = new JTextField();
+		JTextField netConnectIdTf = new JTextField();
 		netConnectIdTf.setEditable(false);
 		GridBagConstraints gbc_netConnectIdTf = new GridBagConstraints();
 		gbc_netConnectIdTf.gridwidth = 2;
@@ -2060,7 +1993,7 @@ public class FerrumX {
 		gbc_netIPStatus.gridy = 0;
 		connectionPanel.add(netIPStatus, gbc_netIPStatus);
 
-		netIpStatusTf = new JTextField();
+		JTextField netIpStatusTf = new JTextField();
 		netIpStatusTf.setEditable(false);
 		GridBagConstraints gbc_netIpStatusTf = new GridBagConstraints();
 		gbc_netIpStatusTf.insets = new Insets(0, 0, 5, 5);
@@ -2078,7 +2011,7 @@ public class FerrumX {
 		gbc_netIPAddress.gridy = 1;
 		connectionPanel.add(netIPAddress, gbc_netIPAddress);
 
-		netIPAddressTf = new JTextField();
+		JTextField netIPAddressTf = new JTextField();
 		netIPAddressTf.setEditable(false);
 		GridBagConstraints gbc_netIPAddressTf = new GridBagConstraints();
 		gbc_netIPAddressTf.insets = new Insets(0, 0, 5, 5);
@@ -2096,7 +2029,7 @@ public class FerrumX {
 		gbc_netIPSubnet.gridy = 2;
 		connectionPanel.add(netIPSubnet, gbc_netIPSubnet);
 
-		netIPSubnetTf = new JTextField();
+		JTextField netIPSubnetTf = new JTextField();
 		netIPSubnetTf.setEditable(false);
 		GridBagConstraints gbc_netIPSubnetTf = new GridBagConstraints();
 		gbc_netIPSubnetTf.insets = new Insets(0, 0, 5, 5);
@@ -2114,7 +2047,7 @@ public class FerrumX {
 		gbc_netGateway.gridy = 3;
 		connectionPanel.add(netGateway, gbc_netGateway);
 
-		netGatewayTf = new JTextField();
+		JTextField netGatewayTf = new JTextField();
 		netGatewayTf.setEditable(false);
 		GridBagConstraints gbc_netGatewayTf = new GridBagConstraints();
 		gbc_netGatewayTf.insets = new Insets(0, 0, 5, 5);
@@ -2132,7 +2065,7 @@ public class FerrumX {
 		gbc_netDHCPStatus.gridy = 4;
 		connectionPanel.add(netDHCPStatus, gbc_netDHCPStatus);
 
-		netDHCPStatusTf = new JTextField();
+		JTextField netDHCPStatusTf = new JTextField();
 		netDHCPStatusTf.setEditable(false);
 		GridBagConstraints gbc_netDHCPStatusTf = new GridBagConstraints();
 		gbc_netDHCPStatusTf.insets = new Insets(0, 0, 5, 5);
@@ -2157,7 +2090,7 @@ public class FerrumX {
 		gbc_netDHCPServer.gridy = 5;
 		connectionPanel.add(netDHCPServer, gbc_netDHCPServer);
 
-		netDHCPServerTf = new JTextField();
+		JTextField netDHCPServerTf = new JTextField();
 		netDHCPServerTf.setEditable(false);
 		GridBagConstraints gbc_netDHCPServerTf = new GridBagConstraints();
 		gbc_netDHCPServerTf.insets = new Insets(0, 0, 5, 5);
@@ -2175,7 +2108,7 @@ public class FerrumX {
 		gbc_netDNSHost.gridy = 6;
 		connectionPanel.add(netDNSHost, gbc_netDNSHost);
 
-		netDNSHostTf = new JTextField();
+		JTextField netDNSHostTf = new JTextField();
 		netDNSHostTf.setEditable(false);
 		GridBagConstraints gbc_netDNSHostTf = new GridBagConstraints();
 		gbc_netDNSHostTf.insets = new Insets(0, 0, 5, 5);
@@ -2193,7 +2126,7 @@ public class FerrumX {
 		gbc_netDNSServer.gridy = 7;
 		connectionPanel.add(netDNSServer, gbc_netDNSServer);
 
-		netDNSServerTf = new JTextField();
+		JTextField netDNSServerTf = new JTextField();
 		netDNSServerTf.setEditable(false);
 		GridBagConstraints gbc_netDNSServerTf = new GridBagConstraints();
 		gbc_netDNSServerTf.insets = new Insets(0, 0, 5, 5);
@@ -2202,6 +2135,9 @@ public class FerrumX {
 		gbc_netDNSServerTf.gridy = 7;
 		connectionPanel.add(netDNSServerTf, gbc_netDNSServerTf);
 		netDNSServerTf.setColumns(10);
+		
+		networkFields.addAll(List.of(netNameTf, netPnpTf, netMacTf, netConnectIdTf, netIpStatusTf, netIPAddressTf,
+				netIPSubnetTf, netGatewayTf, netDHCPStatusTf, netDHCPServerTf, netDNSHostTf, netDNSServerTf));
 	}
 
 	private void initializeStoragePanel(JTabbedPane tabbedPane, JPanel storagePanel) {
@@ -2242,7 +2178,7 @@ public class FerrumX {
 		gbc_diskCaption.gridy = 1;
 		storagePanel.add(diskCaption, gbc_diskCaption);
 
-		diskCaptionTf = new JTextField();
+		JTextField diskCaptionTf = new JTextField();
 		diskCaptionTf.setEditable(false);
 		GridBagConstraints gbc_diskCaptionTf = new GridBagConstraints();
 		gbc_diskCaptionTf.insets = new Insets(0, 0, 5, 0);
@@ -2260,7 +2196,7 @@ public class FerrumX {
 		gbc_diskModel.gridy = 2;
 		storagePanel.add(diskModel, gbc_diskModel);
 
-		diskModelTf = new JTextField();
+		JTextField diskModelTf = new JTextField();
 		diskModelTf.setEditable(false);
 		GridBagConstraints gbc_diskModelTf = new GridBagConstraints();
 		gbc_diskModelTf.insets = new Insets(0, 0, 5, 0);
@@ -2278,7 +2214,7 @@ public class FerrumX {
 		gbc_diskSize.gridy = 3;
 		storagePanel.add(diskSize, gbc_diskSize);
 
-		diskSizeTf = new JTextField();
+		JTextField diskSizeTf = new JTextField();
 		diskSizeTf.setEditable(false);
 		GridBagConstraints gbc_diskSizeTf = new GridBagConstraints();
 		gbc_diskSizeTf.insets = new Insets(0, 0, 5, 0);
@@ -2296,7 +2232,7 @@ public class FerrumX {
 		gbc_diskFirmwareRev.gridy = 4;
 		storagePanel.add(diskFirmwareRev, gbc_diskFirmwareRev);
 
-		firmwareRevisionTf = new JTextField();
+		JTextField firmwareRevisionTf = new JTextField();
 		firmwareRevisionTf.setEditable(false);
 		GridBagConstraints gbc_firmwareRevisionTf = new GridBagConstraints();
 		gbc_firmwareRevisionTf.insets = new Insets(0, 0, 5, 0);
@@ -2314,7 +2250,7 @@ public class FerrumX {
 		gbc_diskSerialNumber.gridy = 5;
 		storagePanel.add(diskSerialNumber, gbc_diskSerialNumber);
 
-		diskSerialNumberTf = new JTextField();
+		JTextField diskSerialNumberTf = new JTextField();
 		diskSerialNumberTf.setEditable(false);
 		GridBagConstraints gbc_diskSerialNumberTf = new GridBagConstraints();
 		gbc_diskSerialNumberTf.insets = new Insets(0, 0, 5, 0);
@@ -2332,7 +2268,7 @@ public class FerrumX {
 		gbc_diskPartitionCount.gridy = 6;
 		storagePanel.add(diskPartitionCount, gbc_diskPartitionCount);
 
-		diskPartitionsTf = new JTextField();
+		JTextField diskPartitionsTf = new JTextField();
 		diskPartitionsTf.setEditable(false);
 		GridBagConstraints gbc_diskPartitionsTf = new GridBagConstraints();
 		gbc_diskPartitionsTf.insets = new Insets(0, 0, 5, 0);
@@ -2350,7 +2286,7 @@ public class FerrumX {
 		gbc_diskStatus.gridy = 7;
 		storagePanel.add(diskStatus, gbc_diskStatus);
 
-		diskStatusTf = new JTextField();
+		JTextField diskStatusTf = new JTextField();
 		diskStatusTf.setEditable(false);
 		GridBagConstraints gbc_diskStatusTf = new GridBagConstraints();
 		gbc_diskStatusTf.insets = new Insets(0, 0, 5, 0);
@@ -2368,7 +2304,7 @@ public class FerrumX {
 		gbc_diskInterface.gridy = 8;
 		storagePanel.add(diskInterface, gbc_diskInterface);
 
-		diskInterfaceTf = new JTextField();
+		JTextField diskInterfaceTf = new JTextField();
 		diskInterfaceTf.setEditable(false);
 		GridBagConstraints gbc_diskInterfaceTf = new GridBagConstraints();
 		gbc_diskInterfaceTf.insets = new Insets(0, 0, 5, 0);
@@ -2388,12 +2324,15 @@ public class FerrumX {
 		storagePanel.add(diskPartitionPanel, gbc_diskPartitionPanel);
 		diskPartitionPanel.setLayout(new GridLayout(1, 0, 0, 0));
 
-		diskPartTa = new JTextArea();
-		diskPartTa.setEditable(false);
-		JScrollPane scroll = new JScrollPane(diskPartTa);
+		partitionArea = new JTextArea();
+		partitionArea.setEditable(false);
+		JScrollPane scroll = new JScrollPane(partitionArea);
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		diskPartitionPanel.add(scroll);
+		
+		storageFields.addAll(List.of(diskCaptionTf, diskModelTf, diskSizeTf, firmwareRevisionTf, diskSerialNumberTf,
+				diskPartitionsTf, diskStatusTf, diskInterfaceTf));
 	}
 
 	private void initializeOsAndUserPanel(JTabbedPane tabbedPane, JPanel osAndUserPanel) {
@@ -2448,7 +2387,7 @@ public class FerrumX {
 		gbc_osCaption.gridy = 1;
 		osPanel.add(osCaption, gbc_osCaption);
 
-		osCaptionTf = new JTextField();
+		JTextField osCaptionTf = new JTextField();
 		osCaptionTf.setEditable(false);
 		GridBagConstraints gbc_osCaptionTf = new GridBagConstraints();
 		gbc_osCaptionTf.gridwidth = 3;
@@ -2484,7 +2423,7 @@ public class FerrumX {
 		gbc_osVersion.gridy = 2;
 		osPanel.add(osVersion, gbc_osVersion);
 
-		osVersionTf = new JTextField();
+		JTextField osVersionTf = new JTextField();
 		osVersionTf.setEditable(false);
 		GridBagConstraints gbc_osVersionTf = new GridBagConstraints();
 		gbc_osVersionTf.insets = new Insets(0, 0, 5, 5);
@@ -2502,7 +2441,7 @@ public class FerrumX {
 		gbc_osBuildNumber.gridy = 2;
 		osPanel.add(osBuildNumber, gbc_osBuildNumber);
 
-		osBuildNumberTf = new JTextField();
+		JTextField osBuildNumberTf = new JTextField();
 		osBuildNumberTf.setEditable(false);
 		GridBagConstraints gbc_osBuildNumberTf = new GridBagConstraints();
 		gbc_osBuildNumberTf.insets = new Insets(0, 0, 5, 5);
@@ -2520,7 +2459,7 @@ public class FerrumX {
 		gbc_osManufacturer.gridy = 3;
 		osPanel.add(osManufacturer, gbc_osManufacturer);
 
-		osManufacturerTf = new JTextField();
+		JTextField osManufacturerTf = new JTextField();
 		osManufacturerTf.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		osManufacturerTf.setEditable(false);
 		GridBagConstraints gbc_osManufacturerTf = new GridBagConstraints();
@@ -2539,7 +2478,7 @@ public class FerrumX {
 		gbc_osArch.gridy = 3;
 		osPanel.add(osArch, gbc_osArch);
 
-		osArchitectureTf = new JTextField();
+		JTextField osArchitectureTf = new JTextField();
 		osArchitectureTf.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		osArchitectureTf.setEditable(false);
 		GridBagConstraints gbc_osArchitectureTf = new GridBagConstraints();
@@ -2558,7 +2497,7 @@ public class FerrumX {
 		gbc_osInstallDate.gridy = 4;
 		osPanel.add(osInstallDate, gbc_osInstallDate);
 
-		osInstallDateTf = new JTextField();
+		JTextField osInstallDateTf = new JTextField();
 		osInstallDateTf.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		osInstallDateTf.setEditable(false);
 		GridBagConstraints gbc_osInstallDateTf = new GridBagConstraints();
@@ -2577,7 +2516,7 @@ public class FerrumX {
 		gbc_osLastBoot.gridy = 4;
 		osPanel.add(osLastBoot, gbc_osLastBoot);
 
-		osLastBootTf = new JTextField();
+		JTextField osLastBootTf = new JTextField();
 		osLastBootTf.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 		osLastBootTf.setEditable(false);
 		GridBagConstraints gbc_osLastBootTf = new GridBagConstraints();
@@ -2596,7 +2535,7 @@ public class FerrumX {
 		gbc_osSerialNumber.gridy = 5;
 		osPanel.add(osSerialNumber, gbc_osSerialNumber);
 
-		osSerialTf = new JTextField();
+		JTextField osSerialTf = new JTextField();
 		osSerialTf.setEditable(false);
 		GridBagConstraints gbc_osSerialTf = new GridBagConstraints();
 		gbc_osSerialTf.gridwidth = 3;
@@ -2615,7 +2554,7 @@ public class FerrumX {
 		gbc_osLanguage.gridy = 5;
 		osPanel.add(osLanguage, gbc_osLanguage);
 
-		osLangTf = new JTextField();
+		JTextField osLangTf = new JTextField();
 		osLangTf.setEditable(false);
 		GridBagConstraints gbc_osLangTf = new GridBagConstraints();
 		gbc_osLangTf.insets = new Insets(0, 0, 5, 0);
@@ -2633,7 +2572,7 @@ public class FerrumX {
 		gbc_osPrimary.gridy = 6;
 		osPanel.add(osPrimary, gbc_osPrimary);
 
-		osPrimaryTf = new JTextField();
+		JTextField osPrimaryTf = new JTextField();
 		osPrimaryTf.setEditable(false);
 		GridBagConstraints gbc_osPrimaryTf = new GridBagConstraints();
 		gbc_osPrimaryTf.insets = new Insets(0, 0, 5, 5);
@@ -2651,7 +2590,7 @@ public class FerrumX {
 		gbc_osDist.gridy = 6;
 		osPanel.add(osDist, gbc_osDist);
 
-		osDistributedTf = new JTextField();
+		JTextField osDistributedTf = new JTextField();
 		osDistributedTf.setEditable(false);
 		GridBagConstraints gbc_osDistributedTf = new GridBagConstraints();
 		gbc_osDistributedTf.insets = new Insets(0, 0, 5, 5);
@@ -2669,7 +2608,7 @@ public class FerrumX {
 		gbc_osPort.gridy = 6;
 		osPanel.add(osPort, gbc_osPort);
 
-		osPortTf = new JTextField();
+		JTextField osPortTf = new JTextField();
 		osPortTf.setEditable(false);
 		GridBagConstraints gbc_osPortTf = new GridBagConstraints();
 		gbc_osPortTf.insets = new Insets(0, 0, 5, 0);
@@ -2687,7 +2626,7 @@ public class FerrumX {
 		gbc_osDeviceName.gridy = 7;
 		osPanel.add(osDeviceName, gbc_osDeviceName);
 
-		osDeviceNameTf = new JTextField();
+		JTextField osDeviceNameTf = new JTextField();
 		osDeviceNameTf.setEditable(false);
 		GridBagConstraints gbc_osDeviceNameTf = new GridBagConstraints();
 		gbc_osDeviceNameTf.insets = new Insets(0, 0, 5, 5);
@@ -2705,7 +2644,7 @@ public class FerrumX {
 		gbc_osUserCount.gridy = 7;
 		osPanel.add(osUserCount, gbc_osUserCount);
 
-		osUserCountTf = new JTextField();
+		JTextField osUserCountTf = new JTextField();
 		osUserCountTf.setEditable(false);
 		GridBagConstraints gbc_osUserCountTf = new GridBagConstraints();
 		gbc_osUserCountTf.insets = new Insets(0, 0, 5, 5);
@@ -2723,7 +2662,7 @@ public class FerrumX {
 		gbc_osRegUser.gridy = 7;
 		osPanel.add(osRegUser, gbc_osRegUser);
 
-		osRegUserTf = new JTextField();
+		JTextField osRegUserTf = new JTextField();
 		osRegUserTf.setEditable(false);
 		GridBagConstraints gbc_osRegUserTf = new GridBagConstraints();
 		gbc_osRegUserTf.insets = new Insets(0, 0, 5, 0);
@@ -2741,7 +2680,7 @@ public class FerrumX {
 		gbc_osDrive.gridy = 8;
 		osPanel.add(osDrive, gbc_osDrive);
 
-		osSysDriveTf = new JTextField();
+		JTextField osSysDriveTf = new JTextField();
 		osSysDriveTf.setEditable(false);
 		GridBagConstraints gbc_osSysDriveTf = new GridBagConstraints();
 		gbc_osSysDriveTf.insets = new Insets(0, 0, 0, 5);
@@ -2759,7 +2698,7 @@ public class FerrumX {
 		gbc_osWinDir.gridy = 8;
 		osPanel.add(osWinDir, gbc_osWinDir);
 
-		osWinDirTf = new JTextField();
+		JTextField osWinDirTf = new JTextField();
 		osWinDirTf.setEditable(false);
 		GridBagConstraints gbc_osWinDirTf = new GridBagConstraints();
 		gbc_osWinDirTf.insets = new Insets(0, 0, 0, 5);
@@ -2777,7 +2716,7 @@ public class FerrumX {
 		gbc_osSysDir.gridy = 8;
 		osPanel.add(osSysDir, gbc_osSysDir);
 
-		osSysDirTf = new JTextField();
+		JTextField osSysDirTf = new JTextField();
 		osSysDirTf.setEditable(false);
 		GridBagConstraints gbc_osSysDirTf = new GridBagConstraints();
 		gbc_osSysDirTf.fill = GridBagConstraints.HORIZONTAL;
@@ -2809,7 +2748,7 @@ public class FerrumX {
 		gbc_currentUser.gridy = 0;
 		userPanel.add(currentUser, gbc_currentUser);
 
-		userTf = new JTextField();
+		JTextField userTf = new JTextField();
 		userTf.setEditable(false);
 		GridBagConstraints gbc_userTf = new GridBagConstraints();
 		gbc_userTf.insets = new Insets(0, 0, 5, 0);
@@ -2818,6 +2757,7 @@ public class FerrumX {
 		gbc_userTf.gridy = 0;
 		userPanel.add(userTf, gbc_userTf);
 		userTf.setColumns(10);
+		SwingUtilities.invokeLater(()->userTf.setText(User.getUsername()));
 
 		JLabel userHomeDir = new JLabel("User Home");
 		GridBagConstraints gbc_userHomeDir = new GridBagConstraints();
@@ -2827,7 +2767,7 @@ public class FerrumX {
 		gbc_userHomeDir.gridy = 1;
 		userPanel.add(userHomeDir, gbc_userHomeDir);
 
-		userHomeTf = new JTextField();
+		JTextField userHomeTf = new JTextField();
 		userHomeTf.setEditable(false);
 		GridBagConstraints gbc_userHomeTf = new GridBagConstraints();
 		gbc_userHomeTf.insets = new Insets(0, 0, 5, 0);
@@ -2836,6 +2776,7 @@ public class FerrumX {
 		gbc_userHomeTf.gridy = 1;
 		userPanel.add(userHomeTf, gbc_userHomeTf);
 		userHomeTf.setColumns(10);
+		SwingUtilities.invokeLater(()->userHomeTf.setText(User.getHome()));
 
 		JSeparator separator = new JSeparator();
 		GridBagConstraints gbc_separator = new GridBagConstraints();
@@ -2853,7 +2794,7 @@ public class FerrumX {
 		gbc_timeZoneName.gridy = 3;
 		userPanel.add(timeZoneName, gbc_timeZoneName);
 
-		timeZoneNameTf = new JTextField();
+		JTextField timeZoneNameTf = new JTextField();
 		timeZoneNameTf.setEditable(false);
 		GridBagConstraints gbc_timeZoneNameTf = new GridBagConstraints();
 		gbc_timeZoneNameTf.insets = new Insets(0, 0, 5, 0);
@@ -2871,7 +2812,7 @@ public class FerrumX {
 		gbc_timeZoneCap.gridy = 4;
 		userPanel.add(timeZoneCap, gbc_timeZoneCap);
 
-		timeZoneCaptionTf = new JTextField();
+		JTextField timeZoneCaptionTf = new JTextField();
 		timeZoneCaptionTf.setEditable(false);
 		GridBagConstraints gbc_timeZoneCaptionTf = new GridBagConstraints();
 		gbc_timeZoneCaptionTf.insets = new Insets(0, 0, 5, 0);
@@ -2880,6 +2821,12 @@ public class FerrumX {
 		gbc_timeZoneCaptionTf.gridy = 4;
 		userPanel.add(timeZoneCaptionTf, gbc_timeZoneCaptionTf);
 		timeZoneCaptionTf.setColumns(10);
+		
+		osFields.addAll(List.of(osCaptionTf, osVersionTf, osManufacturerTf, osArchitectureTf, osBuildNumberTf,
+				osInstallDateTf, osLastBootTf, osSerialTf, osPrimaryTf, osDistributedTf, osPortTf, osDeviceNameTf,
+				osUserCountTf, osRegUserTf, osLangTf, osSysDriveTf, osWinDirTf, osSysDirTf));
+
+		timeZoneFields.addAll(List.of(timeZoneNameTf, timeZoneCaptionTf));
 	}
 	
 	private void initializeBatteryPanel(JTabbedPane tabbedPane, JPanel batteryPanel) {
@@ -2909,12 +2856,7 @@ public class FerrumX {
 		batteryWarningTextArea.setColumns(10);
 		
 		JButton refresh = new JButton("");
-		refresh.addActionListener(e-> new Thread(()->
-				Battery.initializeBattery(batteryChargePercentage, batteryChargeView, batteryCaptionTf, batteryStatusTf, batteryStatusTwoTf, batteryChemistryTf,
-						batteryChargeTf, batteryRuntimeTf, batteryNameTf, batteryDeviceIDTf, batteryCapcityTf,
-						batteryVoltageTf)
-			).start()
-		);
+		refresh.addActionListener(e->{}); //TODO add stuff
 		refresh.setToolTipText("Refresh Battery Information");
 		refresh.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/extra_icons/refresh.svg")));
 		GridBagConstraints gbc_refresh = new GridBagConstraints();
@@ -2947,7 +2889,7 @@ public class FerrumX {
 		gbc_batteryCaption.gridy = 0;
 		batteryPanelOne.add(batteryCaption, gbc_batteryCaption);
 		
-		batteryCaptionTf = new JTextField();
+		JTextField batteryCaptionTf = new JTextField();
 		batteryCaptionTf.setEditable(false);
 		GridBagConstraints gbc_batteryCaptionTf = new GridBagConstraints();
 		gbc_batteryCaptionTf.insets = new Insets(0, 0, 5, 5);
@@ -2965,7 +2907,7 @@ public class FerrumX {
 		gbc_batteryStatus.gridy = 1;
 		batteryPanelOne.add(batteryStatus, gbc_batteryStatus);
 		
-		batteryStatusTf = new JTextField();
+		JTextField batteryStatusTf = new JTextField();
 		batteryStatusTf.setEditable(false);
 		GridBagConstraints gbc_batteryStatusTf = new GridBagConstraints();
 		gbc_batteryStatusTf.insets = new Insets(0, 0, 5, 5);
@@ -2983,7 +2925,7 @@ public class FerrumX {
 		gbc_battryStatusTwo.gridy = 2;
 		batteryPanelOne.add(battryStatusTwo, gbc_battryStatusTwo);
 		
-		batteryStatusTwoTf = new JTextField();
+		JTextField batteryStatusTwoTf = new JTextField();
 		batteryStatusTwoTf.setEditable(false);
 		GridBagConstraints gbc_batteryStatusTwoTf = new GridBagConstraints();
 		gbc_batteryStatusTwoTf.insets = new Insets(0, 0, 5, 5);
@@ -3001,7 +2943,7 @@ public class FerrumX {
 		gbc_batteryChemistry.gridy = 3;
 		batteryPanelOne.add(batteryChemistry, gbc_batteryChemistry);
 		
-		batteryChemistryTf = new JTextField();
+		JTextField batteryChemistryTf = new JTextField();
 		batteryChemistryTf.setEditable(false);
 		GridBagConstraints gbc_batteryChemistryTf = new GridBagConstraints();
 		gbc_batteryChemistryTf.insets = new Insets(0, 0, 5, 5);
@@ -3027,13 +2969,13 @@ public class FerrumX {
 		gbl_batteryIconPanel.rowWeights = new double[]{0.0, 0.0, Double.MIN_VALUE};
 		batteryIconPanel.setLayout(gbl_batteryIconPanel);
 		
-		batteryChargeView = new JLabel("");
-		batteryChargeView.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/battery_level_images/Battery-0.svg")));
+		batteryChargeIcon = new JLabel("");
+		batteryChargeIcon.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/battery_level_images/Battery-0.svg")));
 		GridBagConstraints gbc_batteryChargeView = new GridBagConstraints();
 		gbc_batteryChargeView.insets = new Insets(0, 0, 5, 0);
 		gbc_batteryChargeView.gridx = 0;
 		gbc_batteryChargeView.gridy = 0;
-		batteryIconPanel.add(batteryChargeView, gbc_batteryChargeView);
+		batteryIconPanel.add(batteryChargeIcon, gbc_batteryChargeView);
 		
 		batteryChargePercentage = new JLabel("Current Charge Level: XX%");
 		GridBagConstraints gbc_batteryChargePercentage = new GridBagConstraints();
@@ -3049,7 +2991,7 @@ public class FerrumX {
 		gbc_batteryCharge.gridy = 4;
 		batteryPanelOne.add(batteryCharge, gbc_batteryCharge);
 		
-		batteryChargeTf = new JTextField();
+		JTextField batteryChargeTf = new JTextField();
 		batteryChargeTf.setEditable(false);
 		GridBagConstraints gbc_batteryChargeTf = new GridBagConstraints();
 		gbc_batteryChargeTf.insets = new Insets(0, 0, 5, 5);
@@ -3067,7 +3009,7 @@ public class FerrumX {
 		gbc_batteryRuntime.gridy = 5;
 		batteryPanelOne.add(batteryRuntime, gbc_batteryRuntime);
 		
-		batteryRuntimeTf = new JTextField();
+		JTextField batteryRuntimeTf = new JTextField();
 		batteryRuntimeTf.setEditable(false);
 		GridBagConstraints gbc_batteryRuntimeTf = new GridBagConstraints();
 		gbc_batteryRuntimeTf.insets = new Insets(0, 0, 0, 5);
@@ -3101,7 +3043,7 @@ public class FerrumX {
 		gbc_batteryName.gridy = 0;
 		batteryPanelTwo.add(batteryName, gbc_batteryName);
 		
-		batteryNameTf = new JTextField();
+		JTextField batteryNameTf = new JTextField();
 		batteryNameTf.setEditable(false);
 		GridBagConstraints gbc_batteryNameTf = new GridBagConstraints();
 		gbc_batteryNameTf.insets = new Insets(0, 0, 5, 0);
@@ -3119,7 +3061,7 @@ public class FerrumX {
 		gbc_batteryID.gridy = 1;
 		batteryPanelTwo.add(batteryID, gbc_batteryID);
 		
-		batteryDeviceIDTf = new JTextField();
+		JTextField batteryDeviceIDTf = new JTextField();
 		batteryDeviceIDTf.setEditable(false);
 		GridBagConstraints gbc_batteryDeviceIDTf = new GridBagConstraints();
 		gbc_batteryDeviceIDTf.insets = new Insets(0, 0, 5, 0);
@@ -3137,7 +3079,7 @@ public class FerrumX {
 		gbc_batteryCapacity.gridy = 2;
 		batteryPanelTwo.add(batteryCapacity, gbc_batteryCapacity);
 		
-		batteryCapcityTf = new JTextField();
+		JTextField batteryCapcityTf = new JTextField();
 		batteryCapcityTf.setEditable(false);
 		GridBagConstraints gbc_batteryCapcityTf = new GridBagConstraints();
 		gbc_batteryCapcityTf.insets = new Insets(0, 0, 5, 0);
@@ -3155,7 +3097,7 @@ public class FerrumX {
 		gbc_batteryVoltage.gridy = 3;
 		batteryPanelTwo.add(batteryVoltage, gbc_batteryVoltage);
 		
-		batteryVoltageTf = new JTextField();
+		JTextField batteryVoltageTf = new JTextField();
 		batteryVoltageTf.setEditable(false);
 		GridBagConstraints gbc_batteryVoltageTf = new GridBagConstraints();
 		gbc_batteryVoltageTf.insets = new Insets(0, 0, 5, 0);
@@ -3164,6 +3106,10 @@ public class FerrumX {
 		gbc_batteryVoltageTf.gridy = 3;
 		batteryPanelTwo.add(batteryVoltageTf, gbc_batteryVoltageTf);
 		batteryVoltageTf.setColumns(10);
+
+		batteryFields.addAll(
+				List.of(batteryCaptionTf, batteryStatusTf, batteryStatusTwoTf, batteryChemistryTf, batteryChargeTf,
+						batteryRuntimeTf, batteryNameTf, batteryDeviceIDTf, batteryCapcityTf, batteryVoltageTf));
 	}
 
 	private void initializeReportPanel(JTabbedPane tabbedPane) {
@@ -3321,61 +3267,16 @@ public class FerrumX {
 			copyStatusTf.setText("Successfully copied the Logs to clipboard");
 		});
 	}
-	// TODO revisit and try SwingWorker instead
-	private void initializeSystemInfo(StatusUI startScreen) {
-		try (ExecutorService exec = Executors.newCachedThreadPool()) {
-			Future<Boolean> initializeHardwareId = exec.submit(() -> HardwareId.initializeHardwareId(hwidTf));
-			Future<Boolean> initializeCpu = exec.submit(() -> Cpu.initializeCpu(cpuLogo, cacheTa, cpuChoice, cpuNameTf,
-					cpuCoreTf, cpuThreadTf, cpuLogicProcessorTf, cpuManufacturerTf, addressWidthTf, cpuSocketTf,
-					cpuBaseClockTf, multiplierTf, effectiveClockTf, cpuVersionTf, cpuCaptionTf, cpuFamilyTf,
-					cpuSteppingTf, cpuVirtStatusTf, cpuIdTf, cpuL2Tf, cpuL3Tf));
-			Future<Boolean> initializeMemory = exec.submit(() -> Memory.initializeMemory(memorySlotChoice, memoryNameTf,
-					memoryManufacturerTf, memoryModelTf, memoryOtherInfoTf, memoryPartNumberTf, memoryFormFactorTf,
-					memoryBankLabelTf, memoryCapacityTf, memoryWidthTf, memorySpeedTf, memoryConfigClockSpeedTf,
-					memoryLocatorTf, memorySerialNumberTf));
-			Future<Boolean> initializeMainboard = exec.submit(() -> Mainboard.initializeMainboard(mbManufacturerTf, mbModelTf, mbProductTf, mbSerialNumberTf,
-							mbVersionTf, mbPnpTf, biosNameTf, biosCaptionTf, biosManufacturerTf, biosReleaseDateTf,
-							biosVersionTf, biosStatusTf, smbiosPresenceTf, smbiosVersionTf, biosLanguageTf));
-			Future<Boolean> initializeGpu = exec.submit(() -> Gpu.initializeGpu(gpuLogo, gpuChoiceComboBox, gpuNameTf, gpuPnpTf,
-					gpuHorizontalResTf, gpuVerticalResTf, gpuBitsTf, gpuMinRefTf, gpuMaxRefTf, gpuCurrentRefTf,
-					gpuDACTf, gpuVramTf, gpuDriverVersionTf, gpuDriverDateTf, gpuVideoProcessorTf));
-			Future<Boolean> initializeNetwork = exec.submit(() -> Network.initializeNetwork(netConnectionChoiceBox,
-					netNameTf, netPnpTf, netMacTf, netConnectIdTf, netIpStatusTf, netIPAddressTf, netIPSubnetTf,
-					netGatewayTf, netDHCPStatusTf, netDHCPServerTf, netDNSHostTf, netDNSServerTf));
-			Future<Boolean> initializeStorage = exec.submit(() -> Storage.initializeStorage(diskIndexChoiceBox,
-					diskPartTa, diskCaptionTf, diskModelTf, diskSizeTf, firmwareRevisionTf, diskSerialNumberTf,
-					diskPartitionsTf, diskStatusTf, diskInterfaceTf));
-			Future<Boolean> initializeOs = exec.submit(() -> OperatingSystem.getOsProperties(osCoverImg, currentOsChoiceBox,
-					osCaptionTf, osVersionTf, osManufacturerTf, osArchitectureTf, osBuildNumberTf, osInstallDateTf,
-					osLastBootTf, osSerialTf, osPrimaryTf, osDistributedTf, osPortTf, osDeviceNameTf, osUserCountTf,
-					osRegUserTf, osLangTf, osSysDriveTf, osWinDirTf, osSysDirTf));
-			Future<?> initializeBattery = exec.submit(()-> Battery.initializeBattery(batteryChargePercentage, batteryChargeView, batteryCaptionTf, batteryStatusTf,
-					batteryStatusTwoTf,batteryChemistryTf,batteryChargeTf,batteryRuntimeTf,batteryNameTf,batteryDeviceIDTf,
-					batteryCapcityTf,batteryVoltageTf));
-			Future<Boolean> initializeUserAndTime = exec.submit(() -> UserAndTime.initializeUserAndTime(userTf, userHomeTf, timeZoneNameTf, timeZoneCaptionTf));
-
-			startScreen.setHardwareLabel(initializeHardwareId.get());
-			startScreen.setCpuLabel(initializeCpu.get());
-			startScreen.setMemoryLabel(initializeMemory.get());
-			startScreen.setMainboardLabel(initializeMainboard.get());
-			startScreen.setGpuLabel(initializeGpu.get());
-			startScreen.setNetworkLabel(initializeNetwork.get());
-			startScreen.setStorageLabel(initializeStorage.get());
-			startScreen.setOsLabel(initializeOs.get() && initializeUserAndTime.get());
-			initializeBattery.get();
-
-			TimeUnit.MILLISECONDS.sleep(150);
-			startScreen.dispose();
-		} catch (RejectedExecutionException | NullPointerException | InterruptedException e) {
-				String message = e.getMessage();
-				String stackTrace = Arrays.toString(e.getStackTrace());
-				new ExceptionUI("Host Gather System Info Error", "Error: "+message+"\nStackTrace: \n"+stackTrace).setVisible(true);
-				Thread.currentThread().interrupt();
-		}
-		catch (ExecutionException e) {
-			String message = e.getCause().getMessage();
-			String stackTrace = Arrays.toString(e.getCause().getStackTrace());
-			new ExceptionUI("Host Gather System Info Error", "Error: "+message+"\nStackTrace: \n"+stackTrace).setVisible(true);
-		}
+	private void initializeSystemInfo() {
+		new HardwareId(hwidTf).execute();
+		new Cpu(cpuLogo, cpuChoiceComboBox, cacheTa, cpuFields).execute();
+		new Gpu(gpuLogo, gpuChoiceComboBox, gpuFields).execute();
+		new Memory(memorySlotChoice, memoryFields).execute();
+		new Mainboard(mainboardFields).execute();
+		new Network(netConnectionChoiceBox, networkFields).execute();
+		new Storage(diskIndexChoiceBox, partitionArea, storageFields).execute();
+		new OperatingSystem(osCoverImg, currentOsChoiceBox, osFields).execute();
+		new TimeZone(timeZoneFields).execute();
+		new Battery(batteryChargeIcon, batteryChargePercentage, batteryFields).execute();
 	}
 }

@@ -29,8 +29,8 @@ public class TimeZone extends SwingWorker<Map<String, String>, Void> {
 		try {
 			Map<String, String> timeZone = get();
 			
-			timeZoneFields.get(2).setText(timeZone.get("StandardName"));
-			timeZoneFields.get(3).setText(timeZone.get("Caption"));
+			timeZoneFields.get(0).setText(timeZone.get("StandardName"));
+			timeZoneFields.get(1).setText(timeZone.get("Caption"));
 		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

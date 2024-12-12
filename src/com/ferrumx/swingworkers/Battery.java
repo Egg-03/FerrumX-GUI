@@ -19,6 +19,12 @@ public class Battery extends SwingWorker<List<Map<String, String>>, Void> {
 	private JLabel batteryChargePercentage;
 	private JLabel batteryChargeIcon;
 	List<JTextField> batteryFields;
+	
+	public Battery(JLabel batteryChargePercentage, JLabel batteryChargeIcon, List<JTextField> batteryFields) {
+		this.batteryChargePercentage = batteryChargePercentage;
+		this.batteryChargeIcon = batteryChargeIcon;
+		this.batteryFields = batteryFields;
+	}
 
 	@Override
 	protected List<Map<String, String>> doInBackground() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException {
