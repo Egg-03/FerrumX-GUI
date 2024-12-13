@@ -377,22 +377,6 @@ public class FerrumX {
 			confirm.getBtnNo().addActionListener(e1->confirm.dispose());
 		});
 		helpMenu.add(updateCheck);
-		
-		JMenuItem refresh = new JMenuItem("Refresh Data");
-		refresh.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/extra_icons/refresh.svg")));
-		refresh.addActionListener(e -> {
-			// refresh the textAreas
-			List<JTextArea> tas = new ArrayList<>(List.of(cacheTa, partitionArea));
-			for(JTextArea ta: tas) {
-				SwingUtilities.invokeLater(()->{
-					ta.selectAll();
-					ta.replaceSelection(null);
-				});
-			}
-			// re-initialize info
-			initializeSystemInfo();
-		});
-		helpMenu.add(refresh);
 	}
 
 	private void initializeCpuPanel(JTabbedPane tabbedPane, JPanel hwidCpuPanel) {
