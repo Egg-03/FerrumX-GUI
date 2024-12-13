@@ -43,21 +43,26 @@ public class Battery extends SwingWorker<List<Map<String, String>>, Void> {
 			Map<String, String> battery = batteryClasses.getFirst();
 			Map<String, String> portableBattery = batteryClasses.getLast();
 			
-			String batteryCharge = battery.get("EstimatedChargeRemaining");
-			batteryFields.get(0).setText(battery.get("Caption"));
-			batteryFields.get(1).setText(battery.get("Status"));
-			batteryFields.get(2).setText(batteryStatusInterpreter(battery.get("BatteryStatus")));
-			batteryFields.get(3).setText(batteryChemistryInterpreter(battery.get("Chemistry")));
-			batteryFields.get(4).setText(batteryCharge+"%");
-			batteryFields.get(5).setText(battery.get("EstimatedRunTime")+" min.");
+			if(!battery.isEmpty()) {
+				String batteryCharge = battery.get("EstimatedChargeRemaining");
+				batteryFields.get(0).setText(battery.get("Caption"));
+				batteryFields.get(1).setText(battery.get("Status"));
+				batteryFields.get(2).setText(batteryStatusInterpreter(battery.get("BatteryStatus")));
+				batteryFields.get(3).setText(batteryChemistryInterpreter(battery.get("Chemistry")));
+				batteryFields.get(4).setText(batteryCharge+"%");
+				batteryFields.get(5).setText(battery.get("EstimatedRunTime")+" min.");
+				
+				batteryImageUpdateByCharge(batteryCharge, batteryChargeIcon);
+				batteryChargePercentage.setText("Current Charge Level: "+batteryCharge+"%");
+			}
 			
-			batteryFields.get(6).setText(portableBattery.get("Name"));
-			batteryFields.get(7).setText(portableBattery.get("DeviceID"));
-			batteryFields.get(8).setText(portableBattery.get("DesignCapacity")+"mWh");
-			batteryFields.get(9).setText(portableBattery.get("DesignVoltage")+ "mV");
+			if (!portableBattery.isEmpty()) {
+				batteryFields.get(6).setText(portableBattery.get("Name"));
+				batteryFields.get(7).setText(portableBattery.get("DeviceID"));
+				batteryFields.get(8).setText(portableBattery.get("DesignCapacity")+"mWh");
+				batteryFields.get(9).setText(portableBattery.get("DesignVoltage")+ "mV");
+			}
 			
-			batteryImageUpdateByCharge(batteryCharge, batteryChargeIcon);
-			batteryChargePercentage.setText("Current Charge Level: "+batteryCharge+"%");
 		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

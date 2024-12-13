@@ -379,7 +379,7 @@ public class AboutUI extends JFrame {
 		mainPanel.add(wrapperVersionPanel, gbc_wrapperVersionPanel);
 		wrapperVersionPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
-		JLabel wrapperVersion = new JLabel("v1.3.0");
+		JLabel wrapperVersion = new JLabel("v1.3.1");
 		wrapperVersion.setHorizontalAlignment(SwingConstants.CENTER);
 		wrapperVersionPanel.add(wrapperVersion);
 		wrapperVersion.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 12));
@@ -432,7 +432,7 @@ public class AboutUI extends JFrame {
 		mainPanel.add(guiVersionPanel, gbc_guiVersionPanel);
 		guiVersionPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
-		JLabel guiVersion = new JLabel("v1.1.0");
+		JLabel guiVersion = new JLabel("v1.2.0");
 		guiVersion.setHorizontalAlignment(SwingConstants.CENTER);
 		guiVersionPanel.add(guiVersion);
 		guiVersion.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 12));

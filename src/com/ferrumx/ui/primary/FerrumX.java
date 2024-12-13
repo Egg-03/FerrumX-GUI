@@ -60,7 +60,6 @@ import com.ferrumx.ui.report.SummarizedReportGeneration;
 import com.ferrumx.ui.secondary.AboutUI;
 import com.ferrumx.ui.secondary.ConfirmationUI;
 import com.ferrumx.ui.secondary.ExceptionUI;
-import com.ferrumx.ui.secondary.StatusUI;
 import com.ferrumx.ui.utilities.ComponentImageCapture;
 import com.ferrumx.ui.utilities.DateTime;
 import com.ferrumx.ui.utilities.Elevation;
@@ -116,7 +115,7 @@ public class FerrumX {
 	private List<JTextField> batteryFields = new ArrayList<>();
 
 	// Links
-	private String appLatestReleasePage = "https://github.com/Egg-03/FerrumX/releases/latest";
+	private String appLatestReleasePage = "https://github.com/Egg-03/FerrumX-GUI/releases/latest";
 
 	
 	
@@ -361,7 +360,6 @@ public class FerrumX {
 		about.addActionListener(e -> new AboutUI().setVisible(true));
 		helpMenu.add(about);
 		
-		//TODO change update links
 		JMenuItem updateCheck = new JMenuItem("Check For New Releases");
 		updateCheck.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/menu_icons/release.svg")));
 		updateCheck.addActionListener(e -> {
@@ -379,6 +377,22 @@ public class FerrumX {
 			confirm.getBtnNo().addActionListener(e1->confirm.dispose());
 		});
 		helpMenu.add(updateCheck);
+		
+		JMenuItem refresh = new JMenuItem("Refresh Data");
+		refresh.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/extra_icons/refresh.svg")));
+		refresh.addActionListener(e -> {
+			// refresh the textAreas
+			List<JTextArea> tas = new ArrayList<>(List.of(cacheTa, partitionArea));
+			for(JTextArea ta: tas) {
+				SwingUtilities.invokeLater(()->{
+					ta.selectAll();
+					ta.replaceSelection(null);
+				});
+			}
+			// re-initialize info
+			initializeSystemInfo();
+		});
+		helpMenu.add(refresh);
 	}
 
 	private void initializeCpuPanel(JTabbedPane tabbedPane, JPanel hwidCpuPanel) {
@@ -3271,9 +3285,7 @@ public class FerrumX {
 		});
 	}
 	private void initializeSystemInfo() {
-		StatusUI status = new StatusUI("Booting Up", "Please wait till FerrumX gathers information about your system");
-		
-		new HardwareId(hwidTf, status).execute();
+		new HardwareId(hwidTf).execute();
 		new Cpu(cpuLogo, cpuChoiceComboBox, cacheTa, cpuFields).execute();
 		new Gpu(gpuLogo, gpuChoiceComboBox, gpuFields).execute();
 		new Memory(memorySlotChoice, memoryFields).execute();
