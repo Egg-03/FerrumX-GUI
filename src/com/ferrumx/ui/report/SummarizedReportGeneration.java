@@ -36,7 +36,8 @@ public class SummarizedReportGeneration {
 	private SummarizedReportGeneration() {
 		throw new IllegalStateException("Utility Class");
 	}
-
+	
+	//TODO implement swingworker
 	public static void generate(JTextArea reportDisplay, JTextArea errorDisplay, JButton detailedReportButton,
 			JButton summarizedReportButton, JProgressBar progress) {
 		// set progress bar value to 0

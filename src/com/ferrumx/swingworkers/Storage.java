@@ -76,7 +76,7 @@ public class Storage extends SwingWorker<Map<String, String>, List<String>> {
 
 }
 
-class StorageActionListener extends SwingWorker<Map<String, String>, Void> {
+class StorageActionListener extends SwingWorker<Map<String, String>, JTextArea> {
 	
 	private JComboBox<String> storageChoice;
 	private JTextArea partitionArea;
@@ -91,9 +91,19 @@ class StorageActionListener extends SwingWorker<Map<String, String>, Void> {
 	@Override
 	protected Map<String, String> doInBackground() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException {
 		String selectedDrive = storageChoice.getItemAt(storageChoice.getSelectedIndex());
+		publish(partitionArea);
 		
 		new StoragePartitions(selectedDrive, partitionArea).execute();
 		return Win32_DiskDrive.getDrive(selectedDrive);
+	}
+	
+	@Override
+	protected void process(List<JTextArea> chunks) {
+		for(JTextArea ta: chunks) {
+			// refresh the partitionArea every time a new Storage is selected
+			ta.selectAll();
+			ta.replaceSelection(null);
+		}
 	}
 	
 	@Override

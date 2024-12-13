@@ -14,6 +14,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -38,6 +39,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.WindowConstants;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.DefaultCaret;
@@ -58,13 +60,13 @@ import com.ferrumx.ui.report.SummarizedReportGeneration;
 import com.ferrumx.ui.secondary.AboutUI;
 import com.ferrumx.ui.secondary.ConfirmationUI;
 import com.ferrumx.ui.secondary.ExceptionUI;
+import com.ferrumx.ui.secondary.StatusUI;
 import com.ferrumx.ui.utilities.ComponentImageCapture;
 import com.ferrumx.ui.utilities.DateTime;
 import com.ferrumx.ui.utilities.Elevation;
 import com.ferrumx.ui.utilities.ThemeLoader;
 import com.ferrumx.ui.utilities.UIManagerConfigurations;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import javax.swing.border.LineBorder;
 
 public class FerrumX {
 
@@ -2856,7 +2858,6 @@ public class FerrumX {
 		batteryWarningTextArea.setColumns(10);
 		
 		JButton refresh = new JButton("");
-		refresh.addActionListener(e->{}); //TODO add stuff
 		refresh.setToolTipText("Refresh Battery Information");
 		refresh.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/extra_icons/refresh.svg")));
 		GridBagConstraints gbc_refresh = new GridBagConstraints();
@@ -3110,6 +3111,8 @@ public class FerrumX {
 		batteryFields.addAll(
 				List.of(batteryCaptionTf, batteryStatusTf, batteryStatusTwoTf, batteryChemistryTf, batteryChargeTf,
 						batteryRuntimeTf, batteryNameTf, batteryDeviceIDTf, batteryCapcityTf, batteryVoltageTf));
+		// refresh button action
+		refresh.addActionListener(e->new Battery(batteryChargeIcon, batteryChargePercentage, batteryFields).execute());
 	}
 
 	private void initializeReportPanel(JTabbedPane tabbedPane) {
@@ -3268,7 +3271,9 @@ public class FerrumX {
 		});
 	}
 	private void initializeSystemInfo() {
-		new HardwareId(hwidTf).execute();
+		StatusUI status = new StatusUI("Booting Up", "Please wait till FerrumX gathers information about your system");
+		
+		new HardwareId(hwidTf, status).execute();
 		new Cpu(cpuLogo, cpuChoiceComboBox, cacheTa, cpuFields).execute();
 		new Gpu(gpuLogo, gpuChoiceComboBox, gpuFields).execute();
 		new Memory(memorySlotChoice, memoryFields).execute();

@@ -97,7 +97,7 @@ public class Cpu extends SwingWorker<Map<String, String>, List<String>> {
 	}
 }
 
-class CpuActionListener extends SwingWorker<Map<String, String>, Void>{
+class CpuActionListener extends SwingWorker<Map<String, String>, JTextArea>{
 	
 	private JLabel cpuLogo;
 	private JComboBox<String> cpuChoice;
@@ -114,8 +114,18 @@ class CpuActionListener extends SwingWorker<Map<String, String>, Void>{
 	@Override
 	protected Map<String, String> doInBackground() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException  {
 		String currentCPU = this.cpuChoice.getItemAt(this.cpuChoice.getSelectedIndex());
+		publish(cacheArea);
 		new CpuCache(currentCPU, cacheArea).execute();
 		return Win32_Processor.getCurrentProcessor(currentCPU);
+	}
+	
+	@Override
+	protected void process(List<JTextArea> chunks) {
+		// refresh the contents in textAreas
+		for(JTextArea ta: chunks) {
+			ta.selectAll();
+			ta.replaceSelection(null);
+		}
 	}
 	
 	@Override
@@ -174,6 +184,7 @@ class CpuCache extends SwingWorker<Void, Map<String, String>> {
 
 	@Override
 	protected Void doInBackground() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException {
+	
 		List<String> cpuCacheList = Win32_AssociatedProcessorMemory.getCacheID(currentCpu);
 		for (String currentCacheId : cpuCacheList) {
 			publish(Win32_CacheMemory.getCPUCache(currentCacheId));		

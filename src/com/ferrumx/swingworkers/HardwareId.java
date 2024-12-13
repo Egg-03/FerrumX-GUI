@@ -6,13 +6,16 @@ import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
 import com.ferrumx.system.hardware.HardwareID;
+import com.ferrumx.ui.secondary.StatusUI;
 
 public class HardwareId extends SwingWorker<String, Void> {
 	
 	private JTextField id;
+	private StatusUI status;
 	
-	public HardwareId(JTextField id) {
+	public HardwareId(JTextField id, StatusUI status) {
 		this.id = id;
+		this.status = status;
 	}
 
 	@Override
@@ -24,6 +27,7 @@ public class HardwareId extends SwingWorker<String, Void> {
 	protected void done() {
 		try {
 			id.setText(get());
+			status.setHardwareLabel(true);
 		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
 			id.setText("N/A");
