@@ -408,6 +408,8 @@ public class FerrumX {
 		hwidPanel.setLayout(gbl_hwidPanel);
 
 		hwidTf = new JTextField();
+		hwidTf.setFont(new Font("Tahoma", Font.ITALIC, 11));
+		hwidTf.setText("Collecting Hardware Information...");
 		hwidTf.setEditable(false);
 		GridBagConstraints gbc_hwidTf = new GridBagConstraints();
 		gbc_hwidTf.gridwidth = 2;
