@@ -8,9 +8,12 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
+import org.tinylog.Logger;
+
 import com.ferrumx.exceptions.ShellException;
 import com.ferrumx.system.hardware.Win32_BIOS;
 import com.ferrumx.system.hardware.Win32_Baseboard;
+import com.ferrumx.ui.secondary.ExceptionUI;
 
 public class Mainboard extends SwingWorker<List<Map<String, String>>, Void> {
 	
@@ -53,11 +56,11 @@ public class Mainboard extends SwingWorker<List<Map<String, String>>, Void> {
 			mainboardFields.get(13).setText(bios.get("SMBIOSBIOSVersion"));
 			mainboardFields.get(14).setText(bios.get("CurrentLanguage"));
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Mainboard Error", e.getMessage());
+			Logger.error(e);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Mainboard Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}

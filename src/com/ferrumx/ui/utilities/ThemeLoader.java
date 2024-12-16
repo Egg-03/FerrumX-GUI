@@ -3,11 +3,11 @@ package com.ferrumx.ui.utilities;
 import java.awt.TrayIcon.MessageType;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 
 import javax.swing.JRadioButtonMenuItem;
 
 import org.ini4j.Wini;
+import org.tinylog.Logger;
 
 import com.ferrumx.ui.secondary.ExceptionUI;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -40,10 +40,8 @@ public class ThemeLoader {
 			ini.put("Theme", "CurrentTheme", themeClass);
 			ini.store();
 		} catch (IOException e) {
-			String errorMessage = e.getMessage();
-			String stackTrace = Arrays.toString(e.getStackTrace());
-			new ExceptionUI("Theme Save Error", "Error: " + errorMessage + "\nStackTrace: \n" + stackTrace)
-					.setVisible(true);
+			new ExceptionUI("Theme Save Error", "Error: " + e.getMessage()).setVisible(true);
+			Logger.error(e);
 		}
 	}
 
@@ -77,10 +75,8 @@ public class ThemeLoader {
 			return ini.get("Theme", "CurrentTheme");
 
 		} catch (IOException e) {
-			String errorMessage = e.getMessage();
-			String stackTrace = Arrays.toString(e.getStackTrace());
-			new ExceptionUI("Theme Load Error", "Error: " + errorMessage + "\nStackTrace: \n" + stackTrace)
-					.setVisible(true);
+			new ExceptionUI("Theme Load Error", "Error: " + e.getMessage()).setVisible(true);
+			Logger.error(e);
 			return defaultTheme;
 		}
 	}

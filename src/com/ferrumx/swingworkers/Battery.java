@@ -9,9 +9,12 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
+import org.tinylog.Logger;
+
 import com.ferrumx.exceptions.ShellException;
 import com.ferrumx.system.hardware.Win32_Battery;
 import com.ferrumx.system.hardware.Win32_PortableBattery;
+import com.ferrumx.ui.secondary.ExceptionUI;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class Battery extends SwingWorker<List<Map<String, String>>, Void> {
@@ -64,11 +67,11 @@ public class Battery extends SwingWorker<List<Map<String, String>>, Void> {
 			}
 			
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Battery Error", e.getMessage());
+			Logger.error(e);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Battery Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}

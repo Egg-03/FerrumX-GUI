@@ -9,8 +9,11 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
+import org.tinylog.Logger;
+
 import com.ferrumx.exceptions.ShellException;
 import com.ferrumx.system.hardware.Win32_PhysicalMemory;
+import com.ferrumx.ui.secondary.ExceptionUI;
 
 public class Memory extends SwingWorker<Map<String, String>, List<String>> {
 	
@@ -62,14 +65,14 @@ public class Memory extends SwingWorker<Map<String, String>, List<String>> {
 			
 			memoryChoice.addActionListener(e-> new MemoryActionListener(memoryChoice, memoryFields).execute());
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Memory Error", e.getMessage());
+			Logger.error(e);
 		} catch (NumberFormatException e1) {
 			memoryFields.get(7).setText("N/A"); // sets RAM capacity field to N/A in case the adapterRAM property cannot be
 			// parsed into a Long value
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Memory Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}
@@ -112,14 +115,14 @@ class MemoryActionListener extends SwingWorker<Map<String, String>, Void> {
 			Long memoryCapacity = Long.valueOf(memoryProperties.get("Capacity")) / (1024 * 1024);
 			memoryFields.get(7).setText((String.valueOf(memoryCapacity) + " MB"));
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Memory Action Listener Error", e.getMessage());
+			Logger.error(e);
 		} catch (NumberFormatException e1) {
 			memoryFields.get(7).setText("N/A"); // sets RAM capacity field to N/A in case the adapterRAM property cannot be
 			// parsed into a Long value
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Memory Action Listener Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}

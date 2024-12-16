@@ -10,10 +10,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
+import org.tinylog.Logger;
+
 import com.ferrumx.exceptions.ShellException;
 import com.ferrumx.system.hardware.Win32_DiskDrive;
 import com.ferrumx.system.operating_system.Win32_DiskDriveToDiskPartition;
 import com.ferrumx.system.operating_system.Win32_LogicalDiskToPartition;
+import com.ferrumx.ui.secondary.ExceptionUI;
 
 public class Storage extends SwingWorker<Map<String, String>, List<String>> {
 	
@@ -64,20 +67,20 @@ public class Storage extends SwingWorker<Map<String, String>, List<String>> {
 
 			storageChoice.addActionListener(e-> new StorageActionListener(storageChoice, partitionArea, storageFields).execute());
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Storage Error", e.getMessage());
+			Logger.error(e);
 		} catch (NumberFormatException e1) {
 			storageFields.get(2).setText("N/A"); // sets Storage capacity field to N/A in case the Size property cannot be parsed into a Long value
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Storage Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}
 
 }
 
-class StorageActionListener extends SwingWorker<Map<String, String>, JTextArea> {
+class StorageActionListener extends SwingWorker<Map<String, String>, Void> {
 	
 	private JComboBox<String> storageChoice;
 	private JTextArea partitionArea;
@@ -92,20 +95,11 @@ class StorageActionListener extends SwingWorker<Map<String, String>, JTextArea> 
 	@Override
 	protected Map<String, String> doInBackground() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException {
 		String selectedDrive = storageChoice.getItemAt(storageChoice.getSelectedIndex());
-		publish(partitionArea);
 		
 		new StoragePartitions(selectedDrive, partitionArea).execute();
 		return Win32_DiskDrive.getDrive(selectedDrive);
 	}
 	
-	@Override
-	protected void process(List<JTextArea> chunks) {
-		for(JTextArea ta: chunks) {
-			// refresh the partitionArea every time a new Storage is selected
-			ta.selectAll();
-			ta.replaceSelection(null);
-		}
-	}
 	
 	@Override
 	protected void done() {
@@ -125,13 +119,13 @@ class StorageActionListener extends SwingWorker<Map<String, String>, JTextArea> 
 			storageFields.get(2).setText((String.valueOf(storageCap) + " GB"));
 
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Storage Action Listener Error", e.getMessage());
+			Logger.error(e);
 		} catch (NumberFormatException e1) {
 			storageFields.get(2).setText("N/A"); // sets Storage capacity field to N/A in case the Size property cannot be parsed into a Long value
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Storage Action Listener Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}
@@ -166,13 +160,13 @@ class StoragePartitions extends SwingWorker<String, Void> {
 		try {
 			partitionArea.setText(get());
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			partitionArea.setText("N/A");
-			e.printStackTrace();
+			new ExceptionUI("Storage Partition Letter Mapping Error", e.getMessage());
+			Logger.error(e);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			partitionArea.setText("N/A");
-			e.printStackTrace();
+			new ExceptionUI("Storage Partition Letter Mapping Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}

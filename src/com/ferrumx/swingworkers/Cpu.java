@@ -11,10 +11,13 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
+import org.tinylog.Logger;
+
 import com.ferrumx.exceptions.ShellException;
 import com.ferrumx.system.hardware.Win32_AssociatedProcessorMemory;
 import com.ferrumx.system.hardware.Win32_CacheMemory;
 import com.ferrumx.system.hardware.Win32_Processor;
+import com.ferrumx.ui.secondary.ExceptionUI;
 import com.ferrumx.ui.utilities.IconImageChooser;
 
 public class Cpu extends SwingWorker<Map<String, String>, List<String>> {
@@ -85,13 +88,13 @@ public class Cpu extends SwingWorker<Map<String, String>, List<String>> {
 			cpuChoice.addActionListener(e-> new CpuActionListener(cpuLogo, cpuChoice, cacheArea, cpuFields).execute());
 			
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("CPU Error", e.getMessage());
+			Logger.error(e);
 		} catch (NumberFormatException e3) {
 			cpuFields.get(8).setText("N/A");
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("CPU Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}
@@ -150,13 +153,13 @@ class CpuActionListener extends SwingWorker<Map<String, String>, Void>{
 			IconImageChooser.cpuImageChooser(cpuLogo, manufacturer);
 			
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("CPU Action Listener Error", e.getMessage());
+			Logger.error(e);
 		} catch (NumberFormatException e3) {
 			cpuFields.get(8).setText("N/A");
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("CPU Action Listener Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}	
@@ -190,13 +193,13 @@ class CpuCache extends SwingWorker<String, Void> {
 		try {
 			cacheArea.setText(get()); 
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			cacheArea.setText("N/A");
-			e.printStackTrace();
+			new ExceptionUI("CPU Cache Error", e.getMessage());
+			Logger.error(e);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			cacheArea.setText("N/A");
-			e.printStackTrace();
+			new ExceptionUI("CPU Cache Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}

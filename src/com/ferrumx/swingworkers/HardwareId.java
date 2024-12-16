@@ -5,7 +5,10 @@ import java.util.concurrent.ExecutionException;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
+import org.tinylog.Logger;
+
 import com.ferrumx.system.hardware.HardwareID;
+import com.ferrumx.ui.secondary.ExceptionUI;
 
 public class HardwareId extends SwingWorker<String, Void> {
 	
@@ -25,13 +28,13 @@ public class HardwareId extends SwingWorker<String, Void> {
 		try {
 			id.setText(get());
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
 			id.setText("N/A");
-			e.printStackTrace();
+			new ExceptionUI("HWID Error", e.getMessage());
+			Logger.error(e);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			id.setText("N/A");
-			e.printStackTrace();
+			new ExceptionUI("HWID Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}

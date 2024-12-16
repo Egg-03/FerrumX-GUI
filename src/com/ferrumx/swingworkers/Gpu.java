@@ -10,8 +10,11 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
+import org.tinylog.Logger;
+
 import com.ferrumx.exceptions.ShellException;
 import com.ferrumx.system.hardware.Win32_VideoController;
+import com.ferrumx.ui.secondary.ExceptionUI;
 import com.ferrumx.ui.utilities.IconImageChooser;
 
 public class Gpu extends SwingWorker<Map<String, String>, List<String>> {
@@ -70,13 +73,13 @@ public class Gpu extends SwingWorker<Map<String, String>, List<String>> {
 			
 			gpuChoice.addActionListener(e-> new GpuActionListener(gpuIcon, gpuChoice, gpuFields).execute());
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("GPU Error", e.getMessage());
+			Logger.error(e);
 		} catch (NumberFormatException e1) {
 			gpuFields.get(9).setText("N/A"); // sets VRAM field to N/A in case the adapterRAM property cannot be parsed into a Long value
 		}  catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("GPU Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}
@@ -125,13 +128,14 @@ class GpuActionListener extends SwingWorker<Map<String, String>, Void> {
 			Long adapterRAM = Long.valueOf(gpuProperties.get("AdapterRAM")) / (1024 * 1024);
 			gpuFields.get(9).setText(String.valueOf(adapterRAM) + " MB");
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
+			new ExceptionUI("GPU Action Listener Error", e.getMessage());
+			Logger.error(e);
 			e.printStackTrace();
 		} catch (NumberFormatException e1) {
 			gpuFields.get(9).setText("N/A"); // sets VRAM field to N/A in case the adapterRAM property cannot be parsed into a Long value
 		}  catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("GPU Action Listener Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}

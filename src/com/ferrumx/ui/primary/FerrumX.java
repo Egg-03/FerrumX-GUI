@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.swing.ButtonGroup;
@@ -43,6 +42,8 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.DefaultCaret;
+
+import org.tinylog.Logger;
 
 import com.ferrumx.swingworkers.Battery;
 import com.ferrumx.swingworkers.Cpu;
@@ -130,19 +131,16 @@ public class FerrumX {
 			UIManagerConfigurations.enableTabSeparators(true);
 			
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException| UnsupportedLookAndFeelException e) {
-			String message = e.getMessage();
-			String stackTrace = Arrays.toString(e.getStackTrace());
-			new ExceptionUI("Theme Error", "Error: "+message+"\nStackTrace: \n"+stackTrace).setVisible(true);
+			new ExceptionUI("UI Manager Themeing Error", "Error: "+e.getMessage()).setVisible(true);
+			Logger.error(e);
 		}
 
 		try {
 			FerrumX window = new FerrumX();
 			window.mainFrame.setVisible(true);
 		} catch (Exception e) {
-			e.printStackTrace();
-			String message = e.getMessage();
-			String stackTrace = Arrays.toString(e.getStackTrace());
-			new ExceptionUI("FerrumX Application Window Launch Error", "Error: "+message+"\nStackTrace: \n"+stackTrace).setVisible(true);
+			new ExceptionUI("FerrumX Application Launch Error", "Error: "+e.getMessage()).setVisible(true);
+			Logger.debug(e);
 		}
 	}
 

@@ -9,10 +9,13 @@ import javax.swing.JComboBox;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
+import org.tinylog.Logger;
+
 import com.ferrumx.exceptions.ShellException;
 import com.ferrumx.system.hardware.Win32_NetworkAdapter;
 import com.ferrumx.system.networking.Win32_NetworkAdapterConfiguration;
 import com.ferrumx.system.networking.Win32_NetworkAdapterSetting;
+import com.ferrumx.ui.secondary.ExceptionUI;
 
 public class Network extends SwingWorker<List<Map<String, String>>, List<String>> {
 	
@@ -70,11 +73,11 @@ public class Network extends SwingWorker<List<Map<String, String>>, List<String>
 			networkChoice.addActionListener(e-> new NetworkAdapterListener(networkChoice, networkFields).execute());
 			
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Network Error", e.getMessage());
+			Logger.error(e);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Network Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}
@@ -124,11 +127,11 @@ class NetworkAdapterListener extends SwingWorker<List<Map<String, String>>, Void
 			networkFields.get(11).setText(networkAdapterConfiguration.get("DNSServerSearchOrder"));
 			
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Network Action Listener Error", e.getMessage());
+			Logger.error(e);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("Network Action Listener Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}

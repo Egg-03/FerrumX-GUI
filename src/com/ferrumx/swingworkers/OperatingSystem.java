@@ -9,7 +9,10 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.SwingWorker;
 
+import org.tinylog.Logger;
+
 import com.ferrumx.system.operating_system.Win32_OperatingSystem;
+import com.ferrumx.ui.secondary.ExceptionUI;
 import com.ferrumx.ui.utilities.IconImageChooser;
 
 public class OperatingSystem extends SwingWorker<Map<String, String>, List<String>> {
@@ -71,11 +74,11 @@ public class OperatingSystem extends SwingWorker<Map<String, String>, List<Strin
 			osChoice.addActionListener(e-> new OsActionListener(osLogo, osChoice, osFields).execute());
 			
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("OS Error", e.getMessage());
+			Logger.error(e);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("OS Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}
@@ -127,11 +130,11 @@ class OsActionListener extends SwingWorker<Map<String, String>, Void>{
 			osFields.get(17).setText(osProperties.get("SystemDirectory"));
 			
 		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("OS Action Listener Error", e.getMessage());
+			Logger.error(e);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			new ExceptionUI("OS Action Listener Error", e.getMessage());
+			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
 	}
