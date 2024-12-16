@@ -97,7 +97,7 @@ public class Cpu extends SwingWorker<Map<String, String>, List<String>> {
 	}
 }
 
-class CpuActionListener extends SwingWorker<Map<String, String>, JTextArea>{
+class CpuActionListener extends SwingWorker<Map<String, String>, Void>{
 	
 	private JLabel cpuLogo;
 	private JComboBox<String> cpuChoice;
@@ -114,18 +114,8 @@ class CpuActionListener extends SwingWorker<Map<String, String>, JTextArea>{
 	@Override
 	protected Map<String, String> doInBackground() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException  {
 		String currentCPU = this.cpuChoice.getItemAt(this.cpuChoice.getSelectedIndex());
-		publish(cacheArea);
 		new CpuCache(currentCPU, cacheArea).execute();
 		return Win32_Processor.getCurrentProcessor(currentCPU);
-	}
-	
-	@Override
-	protected void process(List<JTextArea> chunks) {
-		// refresh the contents in textAreas
-		for(JTextArea ta: chunks) {
-			ta.selectAll();
-			ta.replaceSelection(null);
-		}
 	}
 	
 	@Override
@@ -172,7 +162,7 @@ class CpuActionListener extends SwingWorker<Map<String, String>, JTextArea>{
 	}	
 }
 
-class CpuCache extends SwingWorker<Void, Map<String, String>> {
+class CpuCache extends SwingWorker<String, Void> {
 	
 	private String currentCpu;
 	private JTextArea cacheArea;
@@ -183,27 +173,22 @@ class CpuCache extends SwingWorker<Void, Map<String, String>> {
 	}
 
 	@Override
-	protected Void doInBackground() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException {
+	protected String doInBackground() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException {
 	
 		List<String> cpuCacheList = Win32_AssociatedProcessorMemory.getCacheID(currentCpu);
+		StringBuilder cacheInfo = new StringBuilder();
 		for (String currentCacheId : cpuCacheList) {
-			publish(Win32_CacheMemory.getCPUCache(currentCacheId));		
-		}
-		return null;
-	}
-	
-	@Override
-	protected void process(List<Map<String, String>> chunks) {
-		for(Map<String, String> cpuCacheProperties: chunks) {
-			cacheArea.append(cpuCacheProperties.get("Purpose") + ": " + cpuCacheProperties.get("InstalledSize")
+			Map<String, String> cpuCacheProperties = Win32_CacheMemory.getCPUCache(currentCacheId);
+			cacheInfo.append(cpuCacheProperties.get("Purpose") + ": " + cpuCacheProperties.get("InstalledSize")
 			+ " KB - " + cpuCacheProperties.get("Associativity") + " way\n");
 		}
+		return cacheInfo.toString();
 	}
 	
 	@Override
 	protected void done() {
 		try {
-			get();
+			cacheArea.setText(get()); 
 		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
 			cacheArea.setText("N/A");
@@ -215,6 +200,4 @@ class CpuCache extends SwingWorker<Void, Map<String, String>> {
 			Thread.currentThread().interrupt();
 		}
 	}
-
 }
-
