@@ -31,6 +31,7 @@ import com.ferrumx.system.operating_system.Win32_LogicalDiskToPartition;
 import com.ferrumx.system.operating_system.Win32_OperatingSystem;
 import com.ferrumx.system.operating_system.Win32_TimeZone;
 
+// TODO enable logging
 public class SummarizedReportGeneration {
 	
 	private SummarizedReportGeneration() {

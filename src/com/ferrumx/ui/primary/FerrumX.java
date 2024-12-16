@@ -3116,7 +3116,7 @@ public class FerrumX {
 	private void initializeReportPanel(JTabbedPane tabbedPane) {
 		JPanel reportPanel = new JPanel();
 		reportPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		tabbedPane.addTab("Report", new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_small/Report_Tool.svg")), reportPanel, "Generate comprehensive reports");
+		tabbedPane.addTab("<html>Report<sup>BETA</sup></html>", new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_small/Report_Tool.svg")), reportPanel, "Generate comprehensive reports");
 		GridBagLayout gbl_reportPanel = new GridBagLayout();
 		gbl_reportPanel.columnWidths = new int[] { 0, 0, 0 };
 		gbl_reportPanel.rowHeights = new int[] { 0, 0, 0, 0 };
