@@ -13,6 +13,7 @@ import javax.swing.SwingWorker;
 import com.ferrumx.exceptions.ShellException;
 import com.ferrumx.system.hardware.Win32_DiskDrive;
 import com.ferrumx.system.operating_system.Win32_DiskDriveToDiskPartition;
+import com.ferrumx.system.operating_system.Win32_LogicalDiskToPartition;
 
 public class Storage extends SwingWorker<Map<String, String>, List<String>> {
 	
@@ -137,7 +138,7 @@ class StorageActionListener extends SwingWorker<Map<String, String>, JTextArea> 
 	
 }
 
-class StoragePartitions extends SwingWorker<Void, List<String>> {
+class StoragePartitions extends SwingWorker<String, Void> {
 	
 	private String currentDisk;
 	private JTextArea partitionArea;
@@ -148,24 +149,22 @@ class StoragePartitions extends SwingWorker<Void, List<String>> {
 	}
 
 	@Override
-	protected Void doInBackground() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException {
-		publish(Win32_DiskDriveToDiskPartition.getPartitionList(currentDisk));
-		return null;
+	protected String doInBackground() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException {
+		List<String> partitionList = Win32_DiskDriveToDiskPartition.getPartitionList(currentDisk);
+		StringBuilder partitionsAndDriveLetters = new StringBuilder();
+		
+		for(String partition: partitionList) {
+			partitionsAndDriveLetters.append("Partition: "+ partition + ", Partition Letter: "+ Win32_LogicalDiskToPartition.getDriveLetter(partition)+"\n");
+		}
+		
+		return partitionsAndDriveLetters.toString();
 	}
 	
-	@Override
-	protected void process(List<List<String>> chunks) {
-		for(List<String> partitions:chunks) {
-			for(String currentPartition:partitions) {
-				partitionArea.append("Partition: " + currentPartition + "\n"); //TODO Win32_LogicalDiskToPartition(currentPartition) could not be implemented as process() is executed in the AWT Event Thread
-			}
-		}
-	}
 	
 	@Override
 	protected void done() {
 		try {
-			get();
+			partitionArea.setText(get());
 		} catch (ExecutionException e) {
 			// TODO Auto-generated catch block
 			partitionArea.setText("N/A");
@@ -177,6 +176,7 @@ class StoragePartitions extends SwingWorker<Void, List<String>> {
 			Thread.currentThread().interrupt();
 		}
 	}
-
+	
 }
+
 
