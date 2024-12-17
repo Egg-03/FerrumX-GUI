@@ -35,10 +35,10 @@ public class TimeZone extends SwingWorker<Map<String, String>, Void> {
 			timeZoneFields.get(0).setText(timeZone.get("StandardName"));
 			timeZoneFields.get(1).setText(timeZone.get("Caption"));
 		} catch (ExecutionException e) {
-			new ExceptionUI("Time-zone Error", e.getMessage());
+			new ExceptionUI("Time-zone Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (InterruptedException e) {
-			new ExceptionUI("Time-zone Error", e.getMessage());
+			new ExceptionUI("Time-zone Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}

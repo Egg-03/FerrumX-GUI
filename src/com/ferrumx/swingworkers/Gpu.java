@@ -73,12 +73,12 @@ public class Gpu extends SwingWorker<Map<String, String>, List<String>> {
 			
 			gpuChoice.addActionListener(e-> new GpuActionListener(gpuIcon, gpuChoice, gpuFields).execute());
 		} catch (ExecutionException e) {
-			new ExceptionUI("GPU Error", e.getMessage());
+			new ExceptionUI("GPU Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (NumberFormatException e1) {
 			gpuFields.get(9).setText("N/A"); // sets VRAM field to N/A in case the adapterRAM property cannot be parsed into a Long value
 		}  catch (InterruptedException e) {
-			new ExceptionUI("GPU Error", e.getMessage());
+			new ExceptionUI("GPU Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
@@ -128,13 +128,13 @@ class GpuActionListener extends SwingWorker<Map<String, String>, Void> {
 			Long adapterRAM = Long.valueOf(gpuProperties.get("AdapterRAM")) / (1024 * 1024);
 			gpuFields.get(9).setText(String.valueOf(adapterRAM) + " MB");
 		} catch (ExecutionException e) {
-			new ExceptionUI("GPU Action Listener Error", e.getMessage());
+			new ExceptionUI("GPU Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			e.printStackTrace();
 		} catch (NumberFormatException e1) {
 			gpuFields.get(9).setText("N/A"); // sets VRAM field to N/A in case the adapterRAM property cannot be parsed into a Long value
 		}  catch (InterruptedException e) {
-			new ExceptionUI("GPU Action Listener Error", e.getMessage());
+			new ExceptionUI("GPU Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}

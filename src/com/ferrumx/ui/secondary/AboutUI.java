@@ -105,7 +105,7 @@ public class AboutUI extends JFrame {
 						confirm.dispose();
 						themeSupportLink.setForeground(new Color(225, 0, 225)); //this will mark as visited
 					} catch (URISyntaxException | IOException ex) {
-						new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage());
+						new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage()+"\nPlease refer to the logs for more information.");
 						Logger.error(e);
 						confirm.dispose();
 					}
@@ -152,7 +152,7 @@ public class AboutUI extends JFrame {
 						confirm.dispose();
 						svgSupportLink.setForeground(new Color(225, 0, 225)); //this will mark as visited
 					} catch (URISyntaxException | IOException ex) {
-						new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage());
+						new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage()+"\nPlease refer to the logs for more information.");
 						Logger.error(e);
 						confirm.dispose();
 					}
@@ -193,7 +193,7 @@ public class AboutUI extends JFrame {
 						confirm.dispose();
 						iniSupportLink.setForeground(new Color(225, 0, 225)); //this will mark as visited
 					} catch (URISyntaxException | IOException ex) {
-						new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage());
+						new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage()+"\nPlease refer to the logs for more information.");
 						Logger.error(e);
 						confirm.dispose();
 					}
@@ -251,7 +251,7 @@ public class AboutUI extends JFrame {
 						confirm.dispose();
 						extraIconsLink.setForeground(new Color(225, 0, 225)); //this will mark as visited
 					} catch (URISyntaxException | IOException ex) {
-						new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage());
+						new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage()+"\nPlease refer to the logs for more information.");
 						Logger.error(e);
 						confirm.dispose();
 					}
@@ -292,7 +292,7 @@ public class AboutUI extends JFrame {
 						confirm.dispose();
 						developerLink.setForeground(new Color(225, 0, 225)); //this will mark as visited
 					} catch (URISyntaxException | IOException ex) {
-						new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage());
+						new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage()+"\nPlease refer to the logs for more information.");
 						Logger.error(e);
 						confirm.dispose();
 					}
@@ -344,7 +344,7 @@ public class AboutUI extends JFrame {
 						confirm.dispose();
 						iconMakerLink.setForeground(new Color(225, 0, 225)); //this will mark as visited
 					} catch (URISyntaxException | IOException ex) {
-						new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage());
+						new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage()+"\nPlease refer to the logs for more information.");
 						Logger.error(e);
 						confirm.dispose();
 					}
@@ -406,7 +406,7 @@ public class AboutUI extends JFrame {
 				try {
 					Desktop.getDesktop().browse(new URI(appLink));
 				} catch (URISyntaxException | IOException ex) {
-					new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage());
+					new ExceptionUI("Link Visit Error", "Error: "+ex.getMessage()+"\nPlease refer to the logs for more information.");
 					Logger.error(e);
 				}
 			}

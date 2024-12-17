@@ -88,12 +88,12 @@ public class Cpu extends SwingWorker<Map<String, String>, List<String>> {
 			cpuChoice.addActionListener(e-> new CpuActionListener(cpuLogo, cpuChoice, cacheArea, cpuFields).execute());
 			
 		} catch (ExecutionException e) {
-			new ExceptionUI("CPU Error", e.getMessage());
+			new ExceptionUI("CPU Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (NumberFormatException e3) {
 			cpuFields.get(8).setText("N/A");
 		} catch (InterruptedException e) {
-			new ExceptionUI("CPU Error", e.getMessage());
+			new ExceptionUI("CPU Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
@@ -153,12 +153,12 @@ class CpuActionListener extends SwingWorker<Map<String, String>, Void>{
 			IconImageChooser.cpuImageChooser(cpuLogo, manufacturer);
 			
 		} catch (ExecutionException e) {
-			new ExceptionUI("CPU Action Listener Error", e.getMessage());
+			new ExceptionUI("CPU Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (NumberFormatException e3) {
 			cpuFields.get(8).setText("N/A");
 		} catch (InterruptedException e) {
-			new ExceptionUI("CPU Action Listener Error", e.getMessage());
+			new ExceptionUI("CPU Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
@@ -194,11 +194,11 @@ class CpuCache extends SwingWorker<String, Void> {
 			cacheArea.setText(get()); 
 		} catch (ExecutionException e) {
 			cacheArea.setText("N/A");
-			new ExceptionUI("CPU Cache Error", e.getMessage());
+			new ExceptionUI("CPU Cache Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (InterruptedException e) {
 			cacheArea.setText("N/A");
-			new ExceptionUI("CPU Cache Error", e.getMessage());
+			new ExceptionUI("CPU Cache Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}

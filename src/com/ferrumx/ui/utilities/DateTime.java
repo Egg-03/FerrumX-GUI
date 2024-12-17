@@ -25,7 +25,7 @@ public class DateTime {
 			sdf.applyPattern("EEEEE, d MMMMM yyyy");
 			return sdf.format(myDate);
 		} catch (ParseException e) {
-			new ExceptionUI("Date Parsing Error", e.getMessage());
+			new ExceptionUI("Date Parsing Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			return "Date Unavailable";
 		}

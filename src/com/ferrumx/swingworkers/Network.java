@@ -73,10 +73,10 @@ public class Network extends SwingWorker<List<Map<String, String>>, List<String>
 			networkChoice.addActionListener(e-> new NetworkAdapterListener(networkChoice, networkFields).execute());
 			
 		} catch (ExecutionException e) {
-			new ExceptionUI("Network Error", e.getMessage());
+			new ExceptionUI("Network Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (InterruptedException e) {
-			new ExceptionUI("Network Error", e.getMessage());
+			new ExceptionUI("Network Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
@@ -127,10 +127,10 @@ class NetworkAdapterListener extends SwingWorker<List<Map<String, String>>, Void
 			networkFields.get(11).setText(networkAdapterConfiguration.get("DNSServerSearchOrder"));
 			
 		} catch (ExecutionException e) {
-			new ExceptionUI("Network Action Listener Error", e.getMessage());
+			new ExceptionUI("Network Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (InterruptedException e) {
-			new ExceptionUI("Network Action Listener Error", e.getMessage());
+			new ExceptionUI("Network Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}

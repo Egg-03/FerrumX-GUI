@@ -56,10 +56,10 @@ public class Mainboard extends SwingWorker<List<Map<String, String>>, Void> {
 			mainboardFields.get(13).setText(bios.get("SMBIOSBIOSVersion"));
 			mainboardFields.get(14).setText(bios.get("CurrentLanguage"));
 		} catch (ExecutionException e) {
-			new ExceptionUI("Mainboard Error", e.getMessage());
+			new ExceptionUI("Mainboard Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (InterruptedException e) {
-			new ExceptionUI("Mainboard Error", e.getMessage());
+			new ExceptionUI("Mainboard Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}

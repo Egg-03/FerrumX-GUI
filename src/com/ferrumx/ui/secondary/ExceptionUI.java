@@ -60,7 +60,7 @@ public class ExceptionUI extends JFrame {
 				SwingUtilities.invokeLater(()->exceptionArea.setText(e1.getMessage()));
 			}
 		});
-		openLogFolder.setBounds(10, 98, 135, 22);
+		openLogFolder.setBounds(10, 98, 170, 22);
 		panel.add(openLogFolder);
 		
 		JButton checkLatestLogs = new JButton("Check The Latest Log");
@@ -71,7 +71,7 @@ public class ExceptionUI extends JFrame {
 				SwingUtilities.invokeLater(()->exceptionArea.setText(e1.getMessage()));
 			}
 		});
-		checkLatestLogs.setBounds(309, 98, 135, 22);
+		checkLatestLogs.setBounds(284, 98, 160, 22);
 		panel.add(checkLatestLogs);
 		
 		setVisible(true);

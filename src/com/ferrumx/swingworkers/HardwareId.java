@@ -29,11 +29,11 @@ public class HardwareId extends SwingWorker<String, Void> {
 			id.setText(get());
 		} catch (ExecutionException e) {
 			id.setText("N/A");
-			new ExceptionUI("HWID Error", e.getMessage());
+			new ExceptionUI("HWID Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (InterruptedException e) {
 			id.setText("N/A");
-			new ExceptionUI("HWID Error", e.getMessage());
+			new ExceptionUI("HWID Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}

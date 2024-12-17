@@ -141,10 +141,10 @@ public class FerrumX {
 			TimeUnit.SECONDS.sleep(3);
 			window.mainFrame.setVisible(true);
 		} catch (Exception e) {
-			new ExceptionUI("FerrumX Application Launch Error", "Error: "+e.getMessage());
+			new ExceptionUI("FerrumX Application Launch Error", "Application failed to start with the following error: "+e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.debug(e);
 			if(e instanceof InterruptedException) {
-				new ExceptionUI("Application Interrupted", "Error: "+e.getMessage());
+				new ExceptionUI("Application Interrupted", "Error: "+e.getMessage()+"\nPlease refer to the logs for more information.");
 				Logger.debug(e);
 				Thread.currentThread().interrupt();
 			}
@@ -166,7 +166,7 @@ public class FerrumX {
 			SwingUtilities.updateComponentTreeUI(mainframe);
 			ThemeLoader.store(lnfName);
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-			new ExceptionUI("Theme Change Error", e.getMessage());
+			new ExceptionUI("Theme Change Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 		}
 	}
 
@@ -3266,13 +3266,13 @@ public class FerrumX {
 		reportCopy.addActionListener(e -> {
 			reportTextArea.selectAll();
 			reportTextArea.copy();
-			copyStatusTf.setText("Successfully copied the Report to clipboard");
+			SwingUtilities.invokeLater(()-> copyStatusTf.setText("Successfully copied the Report to clipboard"));
 		});
 
 		logCopy.addActionListener(e -> {
 			logTextArea.selectAll();
 			logTextArea.copy();
-			copyStatusTf.setText("Successfully copied the Logs to clipboard");
+			SwingUtilities.invokeLater(()-> copyStatusTf.setText("Successfully copied the Logs to clipboard")); 
 		});
 	}
 	private void initializeSystemInfo() {

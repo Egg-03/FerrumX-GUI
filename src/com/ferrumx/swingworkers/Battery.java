@@ -67,10 +67,10 @@ public class Battery extends SwingWorker<List<Map<String, String>>, Void> {
 			}
 			
 		} catch (ExecutionException e) {
-			new ExceptionUI("Battery Error", e.getMessage());
+			new ExceptionUI("Battery Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (InterruptedException e) {
-			new ExceptionUI("Battery Error", e.getMessage());
+			new ExceptionUI("Battery Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}

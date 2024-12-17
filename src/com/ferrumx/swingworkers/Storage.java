@@ -67,12 +67,12 @@ public class Storage extends SwingWorker<Map<String, String>, List<String>> {
 
 			storageChoice.addActionListener(e-> new StorageActionListener(storageChoice, partitionArea, storageFields).execute());
 		} catch (ExecutionException e) {
-			new ExceptionUI("Storage Error", e.getMessage());
+			new ExceptionUI("Storage Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (NumberFormatException e1) {
 			storageFields.get(2).setText("N/A"); // sets Storage capacity field to N/A in case the Size property cannot be parsed into a Long value
 		} catch (InterruptedException e) {
-			new ExceptionUI("Storage Error", e.getMessage());
+			new ExceptionUI("Storage Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
@@ -119,12 +119,12 @@ class StorageActionListener extends SwingWorker<Map<String, String>, Void> {
 			storageFields.get(2).setText((String.valueOf(storageCap) + " GB"));
 
 		} catch (ExecutionException e) {
-			new ExceptionUI("Storage Action Listener Error", e.getMessage());
+			new ExceptionUI("Storage Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (NumberFormatException e1) {
 			storageFields.get(2).setText("N/A"); // sets Storage capacity field to N/A in case the Size property cannot be parsed into a Long value
 		} catch (InterruptedException e) {
-			new ExceptionUI("Storage Action Listener Error", e.getMessage());
+			new ExceptionUI("Storage Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
@@ -161,11 +161,11 @@ class StoragePartitions extends SwingWorker<String, Void> {
 			partitionArea.setText(get());
 		} catch (ExecutionException e) {
 			partitionArea.setText("N/A");
-			new ExceptionUI("Storage Partition Letter Mapping Error", e.getMessage());
+			new ExceptionUI("Storage Partition Letter Mapping Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (InterruptedException e) {
 			partitionArea.setText("N/A");
-			new ExceptionUI("Storage Partition Letter Mapping Error", e.getMessage());
+			new ExceptionUI("Storage Partition Letter Mapping Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}

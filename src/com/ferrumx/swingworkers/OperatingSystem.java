@@ -74,10 +74,10 @@ public class OperatingSystem extends SwingWorker<Map<String, String>, List<Strin
 			osChoice.addActionListener(e-> new OsActionListener(osLogo, osChoice, osFields).execute());
 			
 		} catch (ExecutionException e) {
-			new ExceptionUI("OS Error", e.getMessage());
+			new ExceptionUI("OS Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (InterruptedException e) {
-			new ExceptionUI("OS Error", e.getMessage());
+			new ExceptionUI("OS Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
@@ -130,10 +130,10 @@ class OsActionListener extends SwingWorker<Map<String, String>, Void>{
 			osFields.get(17).setText(osProperties.get("SystemDirectory"));
 			
 		} catch (ExecutionException e) {
-			new ExceptionUI("OS Action Listener Error", e.getMessage());
+			new ExceptionUI("OS Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 		} catch (InterruptedException e) {
-			new ExceptionUI("OS Action Listener Error", e.getMessage());
+			new ExceptionUI("OS Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
 			Thread.currentThread().interrupt();
 		}
