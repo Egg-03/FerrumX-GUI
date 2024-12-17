@@ -40,7 +40,7 @@ public class NotificationTray {
 			//an action listener should be added which will close this notification on click
 			//this should be done after retrieving an instance of TrayIcon using the getNotification() function
 		} catch (AWTException e) {
-			new ExceptionUI("System Tray Notification Error", "Error: "+e.getMessage()).setVisible(true);
+			new ExceptionUI("System Tray Notification Error", "Error: "+e.getMessage());
 			Logger.error(e);
 			sysTray.remove(trayIcon);
 		}
@@ -52,7 +52,7 @@ public class NotificationTray {
 				trayIcon.displayMessage("FerrumX", message, type);
 				sysTray.remove(trayIcon);
 			} catch (AWTException e) {
-				new ExceptionUI("System Tray Notification Error", "Error: "+e.getMessage()).setVisible(true);
+				new ExceptionUI("System Tray Notification Error", "Error: "+e.getMessage());
 				Logger.error(e);
 				sysTray.remove(trayIcon);
 			}

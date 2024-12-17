@@ -131,7 +131,7 @@ public class FerrumX {
 			UIManagerConfigurations.enableTabSeparators(true);
 			
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException| UnsupportedLookAndFeelException e) {
-			new ExceptionUI("UI Manager Themeing Error", "Error: "+e.getMessage()).setVisible(true);
+			new ExceptionUI("UI Manager Themeing Error", "Error: "+e.getMessage());
 			Logger.error(e);
 		}
 
@@ -139,7 +139,7 @@ public class FerrumX {
 			FerrumX window = new FerrumX();
 			window.mainFrame.setVisible(true);
 		} catch (Exception e) {
-			new ExceptionUI("FerrumX Application Launch Error", "Error: "+e.getMessage()).setVisible(true);
+			new ExceptionUI("FerrumX Application Launch Error", "Error: "+e.getMessage());
 			Logger.debug(e);
 		}
 	}
@@ -159,7 +159,7 @@ public class FerrumX {
 			SwingUtilities.updateComponentTreeUI(mainframe);
 			ThemeLoader.store(lnfName);
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-			new ExceptionUI("Theme Change Error", e.getMessage()).setVisible(true);
+			new ExceptionUI("Theme Change Error", e.getMessage());
 		}
 	}
 
@@ -367,7 +367,7 @@ public class FerrumX {
 					Desktop.getDesktop().browse(new URI(appLatestReleasePage));
 					confirm.dispose();
 				} catch (URISyntaxException | IOException ex) {
-					new ExceptionUI("Github Release Page Visit Error", ex.getMessage()).setVisible(true);
+					new ExceptionUI("Github Release Page Visit Error", ex.getMessage());
 					confirm.dispose();
 				}
 			});

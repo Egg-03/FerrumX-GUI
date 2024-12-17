@@ -40,7 +40,7 @@ public class ThemeLoader {
 			ini.put("Theme", "CurrentTheme", themeClass);
 			ini.store();
 		} catch (IOException e) {
-			new ExceptionUI("Theme Save Error", "Error: " + e.getMessage()).setVisible(true);
+			new ExceptionUI("Theme Save Error", "Error: " + e.getMessage());
 			Logger.error(e);
 		}
 	}
@@ -75,7 +75,7 @@ public class ThemeLoader {
 			return ini.get("Theme", "CurrentTheme");
 
 		} catch (IOException e) {
-			new ExceptionUI("Theme Load Error", "Error: " + e.getMessage()).setVisible(true);
+			new ExceptionUI("Theme Load Error", "Error: " + e.getMessage());
 			Logger.error(e);
 			return defaultTheme;
 		}

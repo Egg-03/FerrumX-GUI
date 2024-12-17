@@ -73,5 +73,7 @@ public class ExceptionUI extends JFrame {
 		});
 		checkLatestLogs.setBounds(309, 98, 135, 22);
 		panel.add(checkLatestLogs);
+		
+		setVisible(true);
 	}
 }

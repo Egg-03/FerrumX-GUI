@@ -50,7 +50,7 @@ public class ComponentImageCapture {
 				try {
 					Desktop.getDesktop().open(savedScreenshotFile);
 				} catch (IOException e1) {
-					new ExceptionUI("Screenshot Opening Error", "Error: "+e1.getMessage()).setVisible(true);
+					new ExceptionUI("Screenshot Opening Error", "Error: "+e1.getMessage());
 					Logger.error(e1);
 				} finally {
 					sysTray.remove(trayIcon);
@@ -62,7 +62,7 @@ public class ComponentImageCapture {
 					TimeUnit.SECONDS.sleep(60);
 					sysTray.remove(trayIcon);
 				} catch (InterruptedException e1) {
-					new ExceptionUI("Notification Auto Removal Error", "Error: "+e1.getMessage()).setVisible(true);
+					new ExceptionUI("Notification Auto Removal Error", "Error: "+e1.getMessage());
 					Logger.error(e1);
 					Thread.currentThread().interrupt();
 				}
@@ -70,7 +70,7 @@ public class ComponentImageCapture {
 			}).start();
 			
 		} catch (IOException e) {
-			new ExceptionUI("Screenshot Error", "Error: "+e.getMessage()).setVisible(true);
+			new ExceptionUI("Screenshot Error", "Error: "+e.getMessage());
 			Logger.error(e);
 		}
 	}
