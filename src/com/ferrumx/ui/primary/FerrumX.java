@@ -13,6 +13,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -137,10 +138,16 @@ public class FerrumX {
 
 		try {
 			FerrumX window = new FerrumX();
+			TimeUnit.SECONDS.sleep(3);
 			window.mainFrame.setVisible(true);
 		} catch (Exception e) {
 			new ExceptionUI("FerrumX Application Launch Error", "Error: "+e.getMessage());
 			Logger.debug(e);
+			if(e instanceof InterruptedException) {
+				new ExceptionUI("Application Interrupted", "Error: "+e.getMessage());
+				Logger.debug(e);
+				Thread.currentThread().interrupt();
+			}
 		}
 	}
 
