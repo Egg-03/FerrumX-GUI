@@ -57,7 +57,7 @@ import com.ferrumx.swingworkers.OperatingSystem;
 import com.ferrumx.swingworkers.Storage;
 import com.ferrumx.swingworkers.TimeZone;
 import com.ferrumx.system.currentuser.User;
-import com.ferrumx.ui.report.DetailedReportGeneration;
+import com.ferrumx.ui.report.DetailedReportGenerationMultiThreaded;
 import com.ferrumx.ui.report.SummarizedReportGeneration;
 import com.ferrumx.ui.secondary.AboutUI;
 import com.ferrumx.ui.secondary.ConfirmationUI;
@@ -3224,8 +3224,7 @@ public class FerrumX {
 		reportControlSubPanel.add(progressBar);
 
 		// add report button action listeners
-		detailedReport.addActionListener(e -> DetailedReportGeneration.generate(reportTextArea, logTextArea,
-				detailedReport, summarizedReport, progressBar));
+		detailedReport.addActionListener(e -> new DetailedReportGenerationMultiThreaded(reportTextArea, logTextArea, detailedReport));
 		summarizedReport.addActionListener(e -> SummarizedReportGeneration.generate(reportTextArea, logTextArea,
 				detailedReport, summarizedReport, progressBar));
 		JPanel reportLogControlPanel = new JPanel();
