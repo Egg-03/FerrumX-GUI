@@ -10,6 +10,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import javax.swing.JButton;
+import javax.swing.JProgressBar;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
 
@@ -38,25 +39,25 @@ public class DetailedReportGenerationMultiThreaded  {
 	private JTextArea reportDisplay;
 	private JTextArea progressDisplay;
 	private JButton detailedReportButton;
+	private JProgressBar progress;
 	
-	public DetailedReportGenerationMultiThreaded (JTextArea reportDisplay, JTextArea errorDisplay, JButton detailedReportButton) {
+	public DetailedReportGenerationMultiThreaded (JTextArea reportDisplay, JTextArea errorDisplay, JButton detailedReportButton, JProgressBar progress) {
 		this.reportDisplay = reportDisplay;
 		this.progressDisplay = errorDisplay;
 		this.detailedReportButton = detailedReportButton;
-		clearAllTextAreas();
-		setReportButtonStatus(false);
+		this.progress = progress;
+		
+		clearComponentStatuses();
 		new Thread(this::compute).start();
 	}
 	
-	private void clearAllTextAreas() {
+	private void clearComponentStatuses() {
 		SwingUtilities.invokeLater(()->{
 			reportDisplay.setText(null);
 			progressDisplay.setText(null);
+			progress.setIndeterminate(true);
+			detailedReportButton.setEnabled(false);
 		});
-	}
-	
-	private void setReportButtonStatus(Boolean buttonEnabled) {
-		SwingUtilities.invokeLater(()->detailedReportButton.setEnabled(buttonEnabled));
 	}
 	
 	private void compute() {
@@ -82,16 +83,23 @@ public class DetailedReportGenerationMultiThreaded  {
 	        for(Future<String> task:futureCompute) {
 	        	sb.append(task.get());
 	        }
-	        SwingUtilities.invokeLater(()-> reportDisplay.setText(sb.toString()));
-	        setReportButtonStatus(true);
+	        
+	        SwingUtilities.invokeLater(()-> {
+	        	reportDisplay.setText(sb.toString());
+	        	progress.setIndeterminate(false);
+	        	progress.setValue(100);
+	        	detailedReportButton.setEnabled(true);
+	        });
 	        
 		} catch (ExecutionException e) {
 			Logger.error(e);
 			SwingUtilities.invokeLater(()-> progressDisplay.setText(e.getMessage()));
 		} catch (InterruptedException e) {
 			Logger.error(e);
-			SwingUtilities.invokeLater(()-> progressDisplay.setText(e.getMessage()));
-			setReportButtonStatus(true);
+			SwingUtilities.invokeLater(()-> {
+				detailedReportButton.setEnabled(true);
+				progressDisplay.setText(e.getMessage());
+			});
 			Thread.currentThread().interrupt();
 		}
 	}

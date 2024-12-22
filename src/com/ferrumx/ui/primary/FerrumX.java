@@ -3215,7 +3215,6 @@ public class FerrumX {
 		reportControlSubPanel.add(summarizedReport);
 
 		JProgressBar progressBar = new JProgressBar();
-		progressBar.setStringPainted(true);
 		sl_reportControlSubPanel.putConstraint(SpringLayout.WEST, progressBar, 10, SpringLayout.WEST,
 				reportControlSubPanel);
 		sl_reportControlSubPanel.putConstraint(SpringLayout.SOUTH, progressBar, -10, SpringLayout.SOUTH,
@@ -3224,7 +3223,7 @@ public class FerrumX {
 		reportControlSubPanel.add(progressBar);
 
 		// add report button action listeners
-		detailedReport.addActionListener(e -> new DetailedReportGenerationMultiThreaded(reportTextArea, logTextArea, detailedReport));
+		detailedReport.addActionListener(e -> new DetailedReportGenerationMultiThreaded(reportTextArea, logTextArea, detailedReport, progressBar));
 		summarizedReport.addActionListener(e -> SummarizedReportGeneration.generate(reportTextArea, logTextArea,
 				detailedReport, summarizedReport, progressBar));
 		JPanel reportLogControlPanel = new JPanel();
