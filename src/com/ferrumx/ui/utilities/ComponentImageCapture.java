@@ -8,10 +8,12 @@ import java.awt.TrayIcon.MessageType;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import javax.imageio.ImageIO;
+
+import org.tinylog.Logger;
+
 import com.ferrumx.system.currentuser.User;
 import com.ferrumx.ui.secondary.ExceptionUI;
 
@@ -48,9 +50,8 @@ public class ComponentImageCapture {
 				try {
 					Desktop.getDesktop().open(savedScreenshotFile);
 				} catch (IOException e1) {
-					String errorMessage = e1.getMessage();
-					String stackTrace = Arrays.toString(e1.getStackTrace());
-					new ExceptionUI("Screenshot Opening Error", "Error: "+errorMessage+"\nStackTrace: \n"+stackTrace).setVisible(true);
+					new ExceptionUI("Screenshot Opening Error", "Error: "+e1.getMessage()+"\nPlease refer to the logs for more information.");
+					Logger.error(e1);
 				} finally {
 					sysTray.remove(trayIcon);
 				}
@@ -61,18 +62,16 @@ public class ComponentImageCapture {
 					TimeUnit.SECONDS.sleep(60);
 					sysTray.remove(trayIcon);
 				} catch (InterruptedException e1) {
-					String errorMessage = e1.getMessage();
-					String stackTrace = Arrays.toString(e1.getStackTrace());
-					new ExceptionUI("Notification Auto Removal Error", "Error: "+errorMessage+"\nStackTrace: \n"+stackTrace).setVisible(true);
+					new ExceptionUI("Notification Auto Removal Error", "Error: "+e1.getMessage()+"\nPlease refer to the logs for more information.");
+					Logger.error(e1);
 					Thread.currentThread().interrupt();
 				}
 				
 			}).start();
 			
 		} catch (IOException e) {
-			String errorMessage = e.getMessage();
-			String stackTrace = Arrays.toString(e.getStackTrace());
-			new ExceptionUI("Screenshot Error", "Error: "+errorMessage+"\nStackTrace: \n"+stackTrace).setVisible(true);
+			new ExceptionUI("Screenshot Error", "Error: "+e.getMessage()+"\nPlease refer to the logs for more information.");
+			Logger.error(e);
 		}
 	}
 }

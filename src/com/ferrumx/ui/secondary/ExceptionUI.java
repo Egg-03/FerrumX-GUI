@@ -1,15 +1,18 @@
 package com.ferrumx.ui.secondary;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Toolkit;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
@@ -28,6 +31,7 @@ public class ExceptionUI extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(490, 190);
+		setLocationRelativeTo(null);
 		getContentPane().setLayout(null);
 
 		JPanel panel = new JPanel();
@@ -48,17 +52,28 @@ public class ExceptionUI extends JFrame {
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		panel.add(scrollPane);
 
-		JLabel copySuccessLabel = new JLabel();
-		copySuccessLabel.setBounds(115, 98, 225, 22);
-		panel.add(copySuccessLabel);
-
-		JButton copyButton = new JButton("Copy Log");
-		copyButton.addActionListener(copyButtonAction -> {
-			exceptionArea.selectAll();
-			exceptionArea.copy();
-			copySuccessLabel.setText("✓ Successfully copied to clipboard");
+		JButton openLogFolder = new JButton("Open The Log Folder");
+		openLogFolder.addActionListener( e-> {
+			try {
+				Desktop.getDesktop().open(new File("crashlogs"));
+			} catch (IOException | NullPointerException | IllegalArgumentException | UnsupportedOperationException | SecurityException e1) {
+				SwingUtilities.invokeLater(()->exceptionArea.setText(e1.getMessage()));
+			}
 		});
-		copyButton.setBounds(10, 98, 97, 22);
-		panel.add(copyButton);
+		openLogFolder.setBounds(10, 98, 170, 22);
+		panel.add(openLogFolder);
+		
+		JButton checkLatestLogs = new JButton("Check The Latest Log");
+		checkLatestLogs.addActionListener( e-> {
+			try {
+				Desktop.getDesktop().open(new File("crashlogs/latest.log"));
+			} catch (IOException | NullPointerException | IllegalArgumentException | UnsupportedOperationException | SecurityException e1) {
+				SwingUtilities.invokeLater(()->exceptionArea.setText(e1.getMessage()));
+			}
+		});
+		checkLatestLogs.setBounds(284, 98, 160, 22);
+		panel.add(checkLatestLogs);
+		
+		setVisible(true);
 	}
 }

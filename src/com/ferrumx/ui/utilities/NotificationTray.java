@@ -4,7 +4,8 @@ import java.awt.AWTException;
 import java.awt.SystemTray;
 import java.awt.TrayIcon;
 import java.awt.TrayIcon.MessageType;
-import java.util.Arrays;
+
+import org.tinylog.Logger;
 
 import com.ferrumx.ui.secondary.ExceptionUI;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -39,9 +40,8 @@ public class NotificationTray {
 			//an action listener should be added which will close this notification on click
 			//this should be done after retrieving an instance of TrayIcon using the getNotification() function
 		} catch (AWTException e) {
-			String errorMessage = e.getMessage();
-			String stackTrace = Arrays.toString(e.getStackTrace());
-			new ExceptionUI("System Tray Notification Error", "Error: "+errorMessage+"\nStackTrace: \n"+stackTrace).setVisible(true);
+			new ExceptionUI("System Tray Notification Error", "Error: "+e.getMessage()+"\nPlease refer to the logs for more information.");
+			Logger.error(e);
 			sysTray.remove(trayIcon);
 		}
     }
@@ -52,9 +52,8 @@ public class NotificationTray {
 				trayIcon.displayMessage("FerrumX", message, type);
 				sysTray.remove(trayIcon);
 			} catch (AWTException e) {
-				String errorMessage = e.getMessage();
-				String stackTrace = Arrays.toString(e.getStackTrace());
-				new ExceptionUI("System Tray Notification Error", "Error: "+errorMessage+"\nStackTrace: \n"+stackTrace).setVisible(true);
+				new ExceptionUI("System Tray Notification Error", "Error: "+e.getMessage()+"\nPlease refer to the logs for more information.");
+				Logger.error(e);
 				sysTray.remove(trayIcon);
 			}
 	}

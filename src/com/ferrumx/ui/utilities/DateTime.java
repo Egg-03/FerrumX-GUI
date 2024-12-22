@@ -4,8 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.Date;
+
+import org.tinylog.Logger;
 
 import com.ferrumx.ui.secondary.ExceptionUI;
 
@@ -24,7 +25,8 @@ public class DateTime {
 			sdf.applyPattern("EEEEE, d MMMMM yyyy");
 			return sdf.format(myDate);
 		} catch (ParseException e) {
-			new ExceptionUI("Date Parsing Error", e.getMessage() + "\n" + Arrays.toString(e.getStackTrace()));
+			new ExceptionUI("Date Parsing Error", e.getMessage()+"\nPlease refer to the logs for more information.");
+			Logger.error(e);
 			return "Date Unavailable";
 		}
 	}

@@ -26,3 +26,6 @@ replay_pid*
 /.settings
 /bin
 /settings
+/lib
+/crashlogs
+/screenshots
