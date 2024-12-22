@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -24,7 +25,6 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -32,7 +32,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SpringLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -42,7 +41,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
-import javax.swing.text.DefaultCaret;
 
 import org.tinylog.Logger;
 
@@ -57,8 +55,7 @@ import com.ferrumx.swingworkers.OperatingSystem;
 import com.ferrumx.swingworkers.Storage;
 import com.ferrumx.swingworkers.TimeZone;
 import com.ferrumx.system.currentuser.User;
-import com.ferrumx.ui.report.DetailedReportGenerationMultiThreaded;
-import com.ferrumx.ui.report.SummarizedReportGeneration;
+import com.ferrumx.ui.report.ReportGeneration;
 import com.ferrumx.ui.secondary.AboutUI;
 import com.ferrumx.ui.secondary.ConfirmationUI;
 import com.ferrumx.ui.secondary.ExceptionUI;
@@ -68,6 +65,7 @@ import com.ferrumx.ui.utilities.Elevation;
 import com.ferrumx.ui.utilities.ThemeLoader;
 import com.ferrumx.ui.utilities.UIManagerConfigurations;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
+import javax.swing.JProgressBar;
 
 public class FerrumX {
 
@@ -3123,155 +3121,44 @@ public class FerrumX {
 	private void initializeReportPanel(JTabbedPane tabbedPane) {
 		JPanel reportPanel = new JPanel();
 		reportPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		tabbedPane.addTab("<html>Report<sup>BETA</sup></html>", new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_small/Report_Tool.svg")), reportPanel, "Generate comprehensive reports");
-		GridBagLayout gbl_reportPanel = new GridBagLayout();
-		gbl_reportPanel.columnWidths = new int[] { 0, 0, 0 };
-		gbl_reportPanel.rowHeights = new int[] { 0, 0, 0, 0 };
-		gbl_reportPanel.columnWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
-		gbl_reportPanel.rowWeights = new double[] { 1.0, 0.0, 1.0, Double.MIN_VALUE };
-		reportPanel.setLayout(gbl_reportPanel);
-
+		tabbedPane.addTab("Report", new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_small/Report_Tool.svg")), reportPanel, "Generate comprehensive reports");
+		reportPanel.setLayout(new BorderLayout(0, 0));
+		
+		// Report Area
 		JPanel reportAreaPanel = new JPanel();
-		reportAreaPanel.setBorder(new TitledBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null),
-				"Report Area", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		GridBagConstraints gbc_reportAreaPanel = new GridBagConstraints();
-		gbc_reportAreaPanel.gridwidth = 2;
-		gbc_reportAreaPanel.insets = new Insets(0, 0, 5, 0);
-		gbc_reportAreaPanel.fill = GridBagConstraints.BOTH;
-		gbc_reportAreaPanel.gridx = 0;
-		gbc_reportAreaPanel.gridy = 0;
-		reportPanel.add(reportAreaPanel, gbc_reportAreaPanel);
-		reportAreaPanel.setLayout(new GridLayout(0, 1, 0, 0));
-
-		JScrollPane reportScrollPane = new JScrollPane();
-		reportAreaPanel.add(reportScrollPane);
-
+		reportAreaPanel.setBorder(new TitledBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), "Report Area", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		reportPanel.add(reportAreaPanel, BorderLayout.CENTER);
+		reportAreaPanel.setLayout(new BorderLayout(0, 0));
+		
 		JTextArea reportTextArea = new JTextArea();
-		reportTextArea.setFont(new Font("Consolas", Font.BOLD, 12));
-		reportScrollPane.setViewportView(reportTextArea);
 		reportTextArea.setEditable(false);
-
-		DefaultCaret reportScrollCaret = (DefaultCaret) reportTextArea.getCaret();
-		reportScrollCaret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-
-		JPanel reportLogPanel = new JPanel();
-		reportLogPanel.setBorder(new TitledBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null),
-				"Report Log", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		GridBagConstraints gbc_reportLogPanel = new GridBagConstraints();
-		gbc_reportLogPanel.insets = new Insets(0, 0, 0, 5);
-		gbc_reportLogPanel.fill = GridBagConstraints.BOTH;
-		gbc_reportLogPanel.gridx = 0;
-		gbc_reportLogPanel.gridy = 2;
-		reportPanel.add(reportLogPanel, gbc_reportLogPanel);
-		reportLogPanel.setLayout(new GridLayout(1, 0, 0, 0));
-
-		JScrollPane logScrollPane = new JScrollPane();
-		reportLogPanel.add(logScrollPane);
-
-		JTextArea logTextArea = new JTextArea();
-		logTextArea.setFont(new Font("Consolas", Font.BOLD, 12));
-		logScrollPane.setViewportView(logTextArea);
-		logTextArea.setEditable(false);
-
+		
+		JScrollPane reportScrollPane = new JScrollPane(reportTextArea);
+		reportScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		reportScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		reportAreaPanel.add(reportScrollPane, BorderLayout.CENTER);
+		
+		// Control Panel
 		JPanel reportControlPanel = new JPanel();
-		reportControlPanel.setBorder(new TitledBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null),
-				"Controls", TitledBorder.TRAILING, TitledBorder.TOP, null, null));
-		GridBagConstraints gbc_reportControlPanel = new GridBagConstraints();
-		gbc_reportControlPanel.fill = GridBagConstraints.BOTH;
-		gbc_reportControlPanel.gridx = 1;
-		gbc_reportControlPanel.gridy = 2;
-		reportPanel.add(reportControlPanel, gbc_reportControlPanel);
-		GridBagLayout gbl_reportControlPanel = new GridBagLayout();
-		gbl_reportControlPanel.columnWidths = new int[] { 0, 0 };
-		gbl_reportControlPanel.rowHeights = new int[] { 0, 0, 0 };
-		gbl_reportControlPanel.columnWeights = new double[] { 1.0, Double.MIN_VALUE };
-		gbl_reportControlPanel.rowWeights = new double[] { 1.0, 1.0, Double.MIN_VALUE };
-		reportControlPanel.setLayout(gbl_reportControlPanel);
-
-		JPanel reportControlSubPanel = new JPanel();
-		reportControlSubPanel.setBorder(new TitledBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null),
-				"Report Controls", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		GridBagConstraints gbc_reportControlSubPanel = new GridBagConstraints();
-		gbc_reportControlSubPanel.insets = new Insets(0, 0, 5, 0);
-		gbc_reportControlSubPanel.fill = GridBagConstraints.BOTH;
-		gbc_reportControlSubPanel.gridx = 0;
-		gbc_reportControlSubPanel.gridy = 0;
-		reportControlPanel.add(reportControlSubPanel, gbc_reportControlSubPanel);
-		SpringLayout sl_reportControlSubPanel = new SpringLayout();
-		reportControlSubPanel.setLayout(sl_reportControlSubPanel);
-
-		JButton detailedReport = new JButton("Detailed Report");
-		sl_reportControlSubPanel.putConstraint(SpringLayout.NORTH, detailedReport, 10, SpringLayout.NORTH,
-				reportControlSubPanel);
-		sl_reportControlSubPanel.putConstraint(SpringLayout.WEST, detailedReport, 10, SpringLayout.WEST,
-				reportControlSubPanel);
-		reportControlSubPanel.add(detailedReport);
-
-		JButton summarizedReport = new JButton("Summarized Report");
-		sl_reportControlSubPanel.putConstraint(SpringLayout.NORTH, summarizedReport, 0, SpringLayout.NORTH,
-				detailedReport);
-		sl_reportControlSubPanel.putConstraint(SpringLayout.EAST, summarizedReport, -10, SpringLayout.EAST,
-				reportControlSubPanel);
-		reportControlSubPanel.add(summarizedReport);
-
+		reportControlPanel.setBorder(new TitledBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), "Controls", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		reportControlPanel.setLayout(new BoxLayout(reportControlPanel, BoxLayout.X_AXIS));
+		reportPanel.add(reportControlPanel, BorderLayout.SOUTH);
+		
+		JButton generateReport = new JButton("Generate Report");
+		reportControlPanel.add(generateReport);
+		
 		JProgressBar progressBar = new JProgressBar();
-		sl_reportControlSubPanel.putConstraint(SpringLayout.WEST, progressBar, 10, SpringLayout.WEST,
-				reportControlSubPanel);
-		sl_reportControlSubPanel.putConstraint(SpringLayout.SOUTH, progressBar, -10, SpringLayout.SOUTH,
-				reportControlSubPanel);
-		sl_reportControlSubPanel.putConstraint(SpringLayout.EAST, progressBar, 0, SpringLayout.EAST, summarizedReport);
-		reportControlSubPanel.add(progressBar);
-
-		// add report button action listeners
-		detailedReport.addActionListener(e -> new DetailedReportGenerationMultiThreaded(reportTextArea, logTextArea, detailedReport, progressBar));
-		summarizedReport.addActionListener(e -> SummarizedReportGeneration.generate(reportTextArea, logTextArea,
-				detailedReport, summarizedReport, progressBar));
-		JPanel reportLogControlPanel = new JPanel();
-		reportLogControlPanel.setBorder(new TitledBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null),
-				"Report Log Controls", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		GridBagConstraints gbc_reportLogControlPanel = new GridBagConstraints();
-		gbc_reportLogControlPanel.fill = GridBagConstraints.BOTH;
-		gbc_reportLogControlPanel.gridx = 0;
-		gbc_reportLogControlPanel.gridy = 1;
-		reportControlPanel.add(reportLogControlPanel, gbc_reportLogControlPanel);
-		SpringLayout sl_reportLogControlPanel = new SpringLayout();
-		reportLogControlPanel.setLayout(sl_reportLogControlPanel);
-
-		JButton reportCopy = new JButton("Copy Report");
-		sl_reportLogControlPanel.putConstraint(SpringLayout.NORTH, reportCopy, 10, SpringLayout.NORTH,
-				reportLogControlPanel);
-		sl_reportLogControlPanel.putConstraint(SpringLayout.WEST, reportCopy, 10, SpringLayout.WEST,
-				reportLogControlPanel);
-		reportLogControlPanel.add(reportCopy);
-
-		JButton logCopy = new JButton("Copy Logs");
-		sl_reportLogControlPanel.putConstraint(SpringLayout.NORTH, logCopy, 0, SpringLayout.NORTH, reportCopy);
-		sl_reportLogControlPanel.putConstraint(SpringLayout.EAST, logCopy, -10, SpringLayout.EAST,
-				reportLogControlPanel);
-		reportLogControlPanel.add(logCopy);
-
-		JTextField copyStatusTf = new JTextField();
-		copyStatusTf.setFont(new Font("Consolas", Font.PLAIN, 10));
-		copyStatusTf.setEditable(false);
-		sl_reportLogControlPanel.putConstraint(SpringLayout.WEST, copyStatusTf, 0, SpringLayout.WEST, reportCopy);
-		sl_reportLogControlPanel.putConstraint(SpringLayout.SOUTH, copyStatusTf, -10, SpringLayout.SOUTH,
-				reportLogControlPanel);
-		sl_reportLogControlPanel.putConstraint(SpringLayout.EAST, copyStatusTf, 0, SpringLayout.EAST, logCopy);
-		reportLogControlPanel.add(copyStatusTf);
-		copyStatusTf.setColumns(10);
-
-		// add copy button action listeners
-		reportCopy.addActionListener(e -> {
+		reportControlPanel.add(progressBar);
+		
+		JButton copyReport = new JButton("Copy Report");
+		copyReport.addActionListener(e-> {
 			reportTextArea.selectAll();
 			reportTextArea.copy();
-			SwingUtilities.invokeLater(()-> copyStatusTf.setText("Successfully copied the Report to clipboard"));
 		});
-
-		logCopy.addActionListener(e -> {
-			logTextArea.selectAll();
-			logTextArea.copy();
-			SwingUtilities.invokeLater(()-> copyStatusTf.setText("Successfully copied the Logs to clipboard")); 
-		});
+		reportControlPanel.add(copyReport);
+		
+		generateReport.addActionListener(e-> new ReportGeneration(reportTextArea, generateReport, progressBar));
+		
 	}
 	private void initializeSystemInfo() {
 		new HardwareId(hwidTf).execute();

@@ -33,19 +33,18 @@ import com.ferrumx.system.networking.Win32_NetworkAdapterSetting;
 import com.ferrumx.system.operating_system.Win32_DiskDriveToDiskPartition;
 import com.ferrumx.system.operating_system.Win32_LogicalDiskToPartition;
 import com.ferrumx.system.operating_system.Win32_OperatingSystem;
+import com.ferrumx.ui.secondary.ExceptionUI;
 
-public class DetailedReportGenerationMultiThreaded  {
+public class ReportGeneration  {
 	
 	private JTextArea reportDisplay;
-	private JTextArea progressDisplay;
-	private JButton detailedReportButton;
-	private JProgressBar progress;
+	private JButton reportButton;
+	private JProgressBar progressBar;
 	
-	public DetailedReportGenerationMultiThreaded (JTextArea reportDisplay, JTextArea errorDisplay, JButton detailedReportButton, JProgressBar progress) {
+	public ReportGeneration (JTextArea reportDisplay, JButton detailedReportButton, JProgressBar progressBar) {
 		this.reportDisplay = reportDisplay;
-		this.progressDisplay = errorDisplay;
-		this.detailedReportButton = detailedReportButton;
-		this.progress = progress;
+		this.reportButton = detailedReportButton;
+		this.progressBar = progressBar;
 		
 		clearComponentStatuses();
 		new Thread(this::compute).start();
@@ -54,9 +53,8 @@ public class DetailedReportGenerationMultiThreaded  {
 	private void clearComponentStatuses() {
 		SwingUtilities.invokeLater(()->{
 			reportDisplay.setText(null);
-			progressDisplay.setText(null);
-			progress.setIndeterminate(true);
-			detailedReportButton.setEnabled(false);
+			progressBar.setIndeterminate(true);
+			reportButton.setEnabled(false);
 		});
 	}
 	
@@ -86,20 +84,18 @@ public class DetailedReportGenerationMultiThreaded  {
 	        
 	        SwingUtilities.invokeLater(()-> {
 	        	reportDisplay.setText(sb.toString());
-	        	progress.setIndeterminate(false);
-	        	progress.setValue(100);
-	        	detailedReportButton.setEnabled(true);
+	        	progressBar.setIndeterminate(false);
+	        	progressBar.setValue(100);
+	        	reportButton.setEnabled(true);
 	        });
 	        
 		} catch (ExecutionException e) {
 			Logger.error(e);
-			SwingUtilities.invokeLater(()-> progressDisplay.setText(e.getMessage()));
+			new ExceptionUI("Report Error", "The Report Generation Module has encountered one or more errors. Please check the logs for more details.\n"+e.getMessage());
 		} catch (InterruptedException e) {
 			Logger.error(e);
-			SwingUtilities.invokeLater(()-> {
-				detailedReportButton.setEnabled(true);
-				progressDisplay.setText(e.getMessage());
-			});
+			new ExceptionUI("Report Error", "The Report Generation Module has encountered an interruption error. Please check the logs for more details.\n"+e.getMessage());
+			SwingUtilities.invokeLater(()-> reportButton.setEnabled(true));
 			Thread.currentThread().interrupt();
 		}
 	}
