@@ -191,7 +191,7 @@ public class ReportGeneration  {
 	
 	private String mainboardPorts() throws IOException, IndexOutOfBoundsException, ShellException, InterruptedException {
 		StringBuilder mainboardPortDetails = new StringBuilder();
-		mainboardPortDetails.append("--------------------MAINBOARD--------------------\n");
+		mainboardPortDetails.append("--------------------MAINBOARD PORTS--------------------\n");
 		List<String> portID = Win32_PortConnector.getBaseboardPortID();
 		for (String id : portID) {
 			Map<String, String> ports = Win32_PortConnector.getBaseboardPorts(id);
