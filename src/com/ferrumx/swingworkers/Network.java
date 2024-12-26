@@ -12,9 +12,9 @@ import javax.swing.SwingWorker;
 import org.tinylog.Logger;
 
 import com.ferrumx.exceptions.ShellException;
+import com.ferrumx.system.associatedclasses.Win32_NetworkAdapterSetting;
 import com.ferrumx.system.hardware.Win32_NetworkAdapter;
 import com.ferrumx.system.networking.Win32_NetworkAdapterConfiguration;
-import com.ferrumx.system.networking.Win32_NetworkAdapterSetting;
 import com.ferrumx.ui.secondary.ExceptionUI;
 
 public class Network extends SwingWorker<List<Map<String, String>>, List<String>> {

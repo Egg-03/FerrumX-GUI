@@ -14,7 +14,7 @@ import javax.swing.SwingWorker;
 import org.tinylog.Logger;
 
 import com.ferrumx.exceptions.ShellException;
-import com.ferrumx.system.hardware.Win32_AssociatedProcessorMemory;
+import com.ferrumx.system.associatedclasses.Win32_AssociatedProcessorMemory;
 import com.ferrumx.system.hardware.Win32_CacheMemory;
 import com.ferrumx.system.hardware.Win32_Processor;
 import com.ferrumx.ui.secondary.ExceptionUI;
