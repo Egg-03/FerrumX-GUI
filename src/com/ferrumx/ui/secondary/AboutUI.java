@@ -398,7 +398,7 @@ public class AboutUI extends JFrame {
 
 		JLabel logo = new JLabel("");
 		logo.setHorizontalAlignment(SwingConstants.CENTER);
-		logo.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/resources/logo_main_broad.svg")));
+		logo.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/resources/logo_main_broad.svg")).setColorFilter(new FlatSVGIcon.ColorFilter(Color::brighter)));
 		logo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		logo.addMouseListener(new MouseAdapter() {
 			@Override
