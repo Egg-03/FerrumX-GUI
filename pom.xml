@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.github.egg-03</groupId>
   <artifactId>ferrumx-gui</artifactId>
-  <version>1.2.0</version>
+  <version>1.2.1</version>
   <name>FerrumX-GUI</name>
   <description>A standard GUI based on the FerrumX wrapper</description>
   <properties>
