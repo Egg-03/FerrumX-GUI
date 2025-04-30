@@ -1,6 +1,20 @@
 # FerrumX-GUI
 A standalone GUI based on FerrumX
 
+# Build Instructions
+You can build your own binaries or download pre-built binaries using the instructions shown in the download section.
+
+### Clone the repository locally
+```
+git clone https://github.com/Egg-03/FerrumX-GUI.git
+```
+
+### Build artifacts using Maven
+In the repository directory, run the following command
+```
+mvn -e clean package
+```
+
 # Download
 You can download pre-built binaries from [Github Releases](https://github.com/Egg-03/FerrumX-GUI/releases)
 
