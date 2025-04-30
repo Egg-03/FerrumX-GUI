@@ -25,6 +25,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -59,13 +60,14 @@ import com.ferrumx.ui.report.ReportGeneration;
 import com.ferrumx.ui.secondary.AboutUI;
 import com.ferrumx.ui.secondary.ConfirmationUI;
 import com.ferrumx.ui.secondary.ExceptionUI;
-import com.ferrumx.ui.utilities.ComponentImageCapture;
+import com.ferrumx.ui.themes.DarkTheme;
+import com.ferrumx.ui.themes.LightTheme;
 import com.ferrumx.ui.utilities.DateTime;
 import com.ferrumx.ui.utilities.Elevation;
-import com.ferrumx.ui.utilities.ThemeLoader;
+import com.ferrumx.ui.utilities.ThemeManager;
 import com.ferrumx.ui.utilities.UIManagerConfigurations;
+import com.formdev.flatlaf.FlatLaf;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
-import javax.swing.JProgressBar;
 
 public class FerrumX {
 
@@ -125,7 +127,8 @@ public class FerrumX {
 	 */
 	public static void main(String[] args) {
 		try {
-			UIManager.setLookAndFeel(ThemeLoader.load());
+			FlatLaf.registerCustomDefaultsSource("themes"); // for maven build, this points towards src/main/resources/themes
+			UIManager.setLookAndFeel(ThemeManager.getRegisteredTheme());
 			UIManagerConfigurations.enableRoundComponents();
 			UIManagerConfigurations.enableTabSeparators(true);
 			
@@ -157,16 +160,6 @@ public class FerrumX {
 		initializeSystemInfo();
 	}
 
-	// changes theme on the fly with application open
-	private void changeTheme(String lnfName, JFrame mainframe) {
-		try {
-			UIManager.setLookAndFeel(lnfName);
-			SwingUtilities.updateComponentTreeUI(mainframe);
-			ThemeLoader.store(lnfName);
-		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
-			new ExceptionUI("Theme Change Error", e.getMessage()+"\nPlease refer to the logs for more information.");
-		}
-	}
 
 	/**
 	 * Initialize the contents of the frame.
@@ -174,7 +167,7 @@ public class FerrumX {
 	private void initializeComponents() {
 		mainFrame = new JFrame();
 		mainFrame.setTitle("FerrumX");
-		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(FerrumX.class.getResource("/resources/icon_main.png")));
+		mainFrame.setIconImage(Toolkit.getDefaultToolkit().getImage(FerrumX.class.getResource("/icons/icon_main.png")));
 		mainFrame.setBounds(100, 100, 860, 640);
 		mainFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		mainFrame.setLocationRelativeTo(null);
@@ -224,7 +217,7 @@ public class FerrumX {
 
 		// Initialize the Menu Bar
 		JMenuBar menuBar = new JMenuBar();
-		initializeMenu(mainFrame, tabbedPane, menuBar);
+		initializeMenu(menuBar);
 		mainFrame.getContentPane().add(menuBar, BorderLayout.NORTH);
 		
 		//show the date of last app startup and operation mode
@@ -236,135 +229,51 @@ public class FerrumX {
 		
 	}
 
-	private void initializeMenu(JFrame mainFrame, JTabbedPane tabbedPane, JMenuBar menuBar) {
+	private void initializeMenu(JMenuBar menuBar) {
 		//theme menu
 		JMenu themeMenu = new JMenu("Appearance");
 		menuBar.add(themeMenu);
 
-		JRadioButtonMenuItem darkThemeChoice = new JRadioButtonMenuItem("Mac Dark");
+		
+		JRadioButtonMenuItem lightThemeChoice = new JRadioButtonMenuItem("Light");
+		lightThemeChoice.addActionListener(e -> {
+			LightTheme.setup();
+			SwingUtilities.updateComponentTreeUI(mainFrame);
+			FlatSVGIcon.ColorFilter.getInstance().setMapper(Color -> java.awt.Color.decode("#fc8d00"));
+			ThemeManager.registerTheme(LightTheme.class.getCanonicalName());
+		});
+		themeMenu.add(lightThemeChoice);
+		
+		JRadioButtonMenuItem darkThemeChoice = new JRadioButtonMenuItem("Dark");
 		darkThemeChoice.addActionListener(e -> {
-			if (darkThemeChoice.isSelected()) {
-				changeTheme("com.formdev.flatlaf.themes.FlatMacDarkLaf", mainFrame);
-				FlatSVGIcon.ColorFilter.getInstance().setMapper(null);
-			}
+			DarkTheme.setup();
+			SwingUtilities.updateComponentTreeUI(mainFrame);
+			FlatSVGIcon.ColorFilter.getInstance().setMapper(null);
+			ThemeManager.registerTheme(DarkTheme.class.getCanonicalName());
 		});
 		themeMenu.add(darkThemeChoice);
 
-		JRadioButtonMenuItem gruvboxThemeChoice = new JRadioButtonMenuItem("Gruvbox Dark");
-		gruvboxThemeChoice.addActionListener(e -> {
-			if (gruvboxThemeChoice.isSelected()) {
-				changeTheme("com.formdev.flatlaf.intellijthemes.FlatGruvboxDarkHardIJTheme", mainFrame);
-				FlatSVGIcon.ColorFilter.getInstance().setMapper(null);
-			}
-		});
-		themeMenu.add(gruvboxThemeChoice);
-
-		JRadioButtonMenuItem moonlightThemeChoice = new JRadioButtonMenuItem("Moonlight Purple");
-		moonlightThemeChoice.addActionListener(e -> {
-			if (moonlightThemeChoice.isSelected()) {
-				changeTheme("com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMoonlightIJTheme", mainFrame);
-				FlatSVGIcon.ColorFilter.getInstance().setMapper(null);
-			}
-		});
-		themeMenu.add(moonlightThemeChoice);
-
-		JRadioButtonMenuItem monokaiproThemeChoice = new JRadioButtonMenuItem("Monokai Pro");
-		monokaiproThemeChoice.addActionListener(e -> {
-			if (monokaiproThemeChoice.isSelected()) {
-				changeTheme("com.formdev.flatlaf.intellijthemes.FlatMonokaiProIJTheme", mainFrame);
-				FlatSVGIcon.ColorFilter.getInstance().setMapper(null);
-			}
-		});
-		themeMenu.add(monokaiproThemeChoice);
-
-		JRadioButtonMenuItem purpleThemeChoice = new JRadioButtonMenuItem("Dark Purple");
-		purpleThemeChoice.addActionListener(e -> {
-			if (purpleThemeChoice.isSelected()) {
-				changeTheme("com.formdev.flatlaf.intellijthemes.FlatDarkPurpleIJTheme", mainFrame);
-				FlatSVGIcon.ColorFilter.getInstance().setMapper(null);
-			}
-		});
-		themeMenu.add(purpleThemeChoice);
-
-		JRadioButtonMenuItem carbonThemeChoice = new JRadioButtonMenuItem("Carbon");
-		carbonThemeChoice.addActionListener(e -> {
-			if (carbonThemeChoice.isSelected()) {
-				changeTheme("com.formdev.flatlaf.intellijthemes.FlatCarbonIJTheme", mainFrame);
-				FlatSVGIcon.ColorFilter.getInstance().setMapper(null);
-			}
-		});
-		themeMenu.add(carbonThemeChoice);
-		
-		JRadioButtonMenuItem samLaf = new JRadioButtonMenuItem("Sam's Blood Moon");
-		samLaf.addActionListener(e -> {
-			if (samLaf.isSelected()) {
-				changeTheme("com.egg.flatlafcustomthemes.SamLaf", mainFrame);
-				FlatSVGIcon.ColorFilter.getInstance().setMapper(Color -> java.awt.Color.decode("#fe4956"));
-			}
-		});
-		themeMenu.add(samLaf);
-		
-		JRadioButtonMenuItem bellLaf = new JRadioButtonMenuItem("Bell's Pink World");
-		bellLaf.addActionListener(e -> {
-			if (bellLaf.isSelected()) {
-				changeTheme("com.egg.flatlafcustomthemes.BellLaf", mainFrame);
-				FlatSVGIcon.ColorFilter.getInstance().setMapper(Color -> java.awt.Color.PINK);
-			}
-		});
-		themeMenu.add(bellLaf);
-		
-		JRadioButtonMenuItem noirLightLaf = new JRadioButtonMenuItem("Noir Light");
-		noirLightLaf.addActionListener(e -> {
-			if (noirLightLaf.isSelected()) {
-				changeTheme("com.egg.flatlafcustomthemes.NoirLightLaf", mainFrame);
-				FlatSVGIcon.ColorFilter.getInstance().setMapper(null);
-			}
-		});
-		themeMenu.add(noirLightLaf);
-		
-		JRadioButtonMenuItem noirDarkLaf = new JRadioButtonMenuItem("Noir Dark");
-		noirDarkLaf.addActionListener(e -> {
-			if (noirDarkLaf.isSelected()) {
-				changeTheme("com.egg.flatlafcustomthemes.NoirDarkLaf", mainFrame);
-				FlatSVGIcon.ColorFilter.getInstance().setMapper(null);
-			}
-		});
-		themeMenu.add(noirDarkLaf);
 
 		ButtonGroup themeButtonGroup = new ButtonGroup();
-		themeButtonGroup.add(gruvboxThemeChoice);
-		themeButtonGroup.add(moonlightThemeChoice);
+		
+		themeButtonGroup.add(lightThemeChoice);
 		themeButtonGroup.add(darkThemeChoice);
-		themeButtonGroup.add(monokaiproThemeChoice);
-		themeButtonGroup.add(purpleThemeChoice);
-		themeButtonGroup.add(carbonThemeChoice);
-		themeButtonGroup.add(samLaf);
-		themeButtonGroup.add(bellLaf);
-		themeButtonGroup.add(noirLightLaf);
-		themeButtonGroup.add(noirDarkLaf);
+		
 		
 		//this will load the currently applied theme from the ini file and will invoke the setSelected method for the currently applied JRadioButtonMenuItem theme button
-		ThemeLoader.notifyCurrentThemeUsage(darkThemeChoice, gruvboxThemeChoice, moonlightThemeChoice, monokaiproThemeChoice, purpleThemeChoice, carbonThemeChoice, samLaf, bellLaf, noirLightLaf, noirDarkLaf);
-		//options menu
-		JMenu optionsMenu = new JMenu("Options");
-		menuBar.add(optionsMenu);
-		
-		JMenuItem Screenshot = new JMenuItem("Screenshot");
-		Screenshot.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/menu_icons/screenshot.svg")));
-		Screenshot.addActionListener(e->ComponentImageCapture.getScreenshot(mainFrame, tabbedPane.getTitleAt(tabbedPane.getSelectedIndex())));
-		optionsMenu.add(Screenshot);
+		ThemeManager.notifyCurrentTheme(lightThemeChoice, darkThemeChoice);
 
 		//help menu
 		JMenu helpMenu = new JMenu("Help");
 		menuBar.add(helpMenu);
 
 		JMenuItem about = new JMenuItem("About");
-		about.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/menu_icons/about.svg")));
+		about.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/icons/menu_icons/about.svg")));
 		about.addActionListener(e -> new AboutUI().setVisible(true));
 		helpMenu.add(about);
 		
 		JMenuItem updateCheck = new JMenuItem("Check For New Releases");
-		updateCheck.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/menu_icons/release.svg")));
+		updateCheck.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/icons/menu_icons/release.svg")));
 		updateCheck.addActionListener(e -> {
 			ConfirmationUI confirm = new ConfirmationUI("Github Releases","This will open a new browser window. Continue ?");
 			confirm.getBtnYes().addActionListener(e1->{
@@ -384,7 +293,7 @@ public class FerrumX {
 
 	private void initializeCpuPanel(JTabbedPane tabbedPane, JPanel hwidCpuPanel) {
 		
-		tabbedPane.addTab("CPU", new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_small/CPU.svg")),
+		tabbedPane.addTab("CPU", new FlatSVGIcon(FerrumX.class.getResource("/icons/tab_icons_small/CPU.svg")),
 				hwidCpuPanel, "Displays CPU Information");
 		tabbedPane.setEnabledAt(0, true);
 		GridBagLayout gbl_hwidCpuPanel = new GridBagLayout();
@@ -425,7 +334,7 @@ public class FerrumX {
 
 		JButton copyHwidButton = new JButton();
 		copyHwidButton.setToolTipText("Copy HWID to Clipboard");
-		copyHwidButton.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/extra_icons/copy.svg")));
+		copyHwidButton.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/icons/extra_icons/copy.svg")));
 		copyHwidButton.addActionListener(e -> {
 			hwidTf.selectAll();
 			hwidTf.copy();
@@ -906,7 +815,7 @@ public class FerrumX {
 	private void initializeMemoryPanel(JTabbedPane tabbedPane, JPanel memoryPanel) {
 		memoryPanel.setBorder(new TitledBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), "Memory",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		tabbedPane.addTab("Memory", new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_small/RAM.svg")),
+		tabbedPane.addTab("Memory", new FlatSVGIcon(FerrumX.class.getResource("/icons/tab_icons_small/RAM.svg")),
 				memoryPanel, "Displays Memory Information");
 		GridBagLayout gbl_memoryPanel = new GridBagLayout();
 		gbl_memoryPanel.columnWidths = new int[] { 0, 0 };
@@ -1202,7 +1111,7 @@ public class FerrumX {
 
 	private void initializeMainboardPanel(JTabbedPane tabbedPane, JPanel mainBoardPanel) {
 		tabbedPane.addTab("Mainboard",
-				new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_small/MainBoard.svg")), mainBoardPanel,
+				new FlatSVGIcon(FerrumX.class.getResource("/icons/tab_icons_small/MainBoard.svg")), mainBoardPanel,
 				"Displays Motherboard and BIOS Info");
 		tabbedPane.setEnabledAt(2, true);
 		GridBagLayout gbl_mainBoardPanel = new GridBagLayout();
@@ -1519,7 +1428,7 @@ public class FerrumX {
 	private void initializeGpuPanel(JTabbedPane tabbedPane, JPanel gpuPanel) {
 		gpuPanel.setBorder(new TitledBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null),
 				"Video Controller", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		tabbedPane.addTab("GPU", new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_medium/GPU.svg")),
+		tabbedPane.addTab("GPU", new FlatSVGIcon(FerrumX.class.getResource("/icons/tab_icons_medium/GPU.svg")),
 				gpuPanel, "Displays basic information about your GPUs");
 		GridBagLayout gbl_gpuPanel = new GridBagLayout();
 		gbl_gpuPanel.columnWidths = new int[] { 0, 0 };
@@ -1856,7 +1765,7 @@ public class FerrumX {
 	}
 
 	private void initializeNetworkPanel(JTabbedPane tabbedPane, JPanel networkPanel) {
-		tabbedPane.addTab("Network", new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_small/Network.svg")),
+		tabbedPane.addTab("Network", new FlatSVGIcon(FerrumX.class.getResource("/icons/tab_icons_small/Network.svg")),
 				networkPanel, "Displays network information");
 		GridBagLayout gbl_networkPanel = new GridBagLayout();
 		gbl_networkPanel.columnWidths = new int[] { 0, 0 };
@@ -2149,7 +2058,7 @@ public class FerrumX {
 
 		storagePanel.setBorder(new TitledBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), "Storage",
 				TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		tabbedPane.addTab("Storage", new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_small/Storage.svg")),
+		tabbedPane.addTab("Storage", new FlatSVGIcon(FerrumX.class.getResource("/icons/tab_icons_small/Storage.svg")),
 				storagePanel, "Displays disk information");
 		GridBagLayout gbl_storagePanel = new GridBagLayout();
 		gbl_storagePanel.columnWidths = new int[] { 0, 0, 0 };
@@ -2342,7 +2251,7 @@ public class FerrumX {
 
 	private void initializeOsAndUserPanel(JTabbedPane tabbedPane, JPanel osAndUserPanel) {
 		osAndUserPanel.setBorder(null);
-		tabbedPane.addTab("OS", new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_small/OS.svg")),
+		tabbedPane.addTab("OS", new FlatSVGIcon(FerrumX.class.getResource("/icons/tab_icons_small/OS.svg")),
 				osAndUserPanel, "Displays OS, User and Timezone information");
 		GridBagLayout gbl_osAndUserPanel = new GridBagLayout();
 		gbl_osAndUserPanel.columnWidths = new int[] { 0, 0 };
@@ -2835,7 +2744,7 @@ public class FerrumX {
 	}
 	
 	private void initializeBatteryPanel(JTabbedPane tabbedPane, JPanel batteryPanel) {
-		tabbedPane.addTab("Battery", new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_small/Battery.svg")), batteryPanel, "Displays Battery Information");
+		tabbedPane.addTab("Battery", new FlatSVGIcon(FerrumX.class.getResource("/icons/tab_icons_small/Battery.svg")), batteryPanel, "Displays Battery Information");
 		batteryPanel.setBorder(new TitledBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null), "Battery", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		GridBagLayout gbl_batteryPanel = new GridBagLayout();
 		gbl_batteryPanel.columnWidths = new int[]{0, 0, 0};
@@ -2862,7 +2771,7 @@ public class FerrumX {
 		
 		JButton refresh = new JButton("");
 		refresh.setToolTipText("Refresh Battery Information");
-		refresh.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/extra_icons/refresh.svg")));
+		refresh.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/icons/extra_icons/refresh.svg")));
 		GridBagConstraints gbc_refresh = new GridBagConstraints();
 		gbc_refresh.insets = new Insets(0, 0, 5, 0);
 		gbc_refresh.gridx = 1;
@@ -2974,7 +2883,7 @@ public class FerrumX {
 		batteryIconPanel.setLayout(gbl_batteryIconPanel);
 		
 		batteryChargeIcon = new JLabel("");
-		batteryChargeIcon.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/resources/battery_level_images/Battery-0.svg")));
+		batteryChargeIcon.setIcon(new FlatSVGIcon(FerrumX.class.getResource("/icons/battery_level_images/Battery-0.svg")));
 		GridBagConstraints gbc_batteryChargeView = new GridBagConstraints();
 		gbc_batteryChargeView.insets = new Insets(0, 0, 5, 0);
 		gbc_batteryChargeView.gridx = 0;
@@ -3121,7 +3030,7 @@ public class FerrumX {
 	private void initializeReportPanel(JTabbedPane tabbedPane) {
 		JPanel reportPanel = new JPanel();
 		reportPanel.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		tabbedPane.addTab("Report", new FlatSVGIcon(FerrumX.class.getResource("/resources/tab_icons_small/Report_Tool.svg")), reportPanel, "Generate comprehensive reports");
+		tabbedPane.addTab("Report", new FlatSVGIcon(FerrumX.class.getResource("/icons/tab_icons_small/Report_Tool.svg")), reportPanel, "Generate comprehensive reports");
 		reportPanel.setLayout(new BorderLayout(0, 0));
 		
 		// Report Area

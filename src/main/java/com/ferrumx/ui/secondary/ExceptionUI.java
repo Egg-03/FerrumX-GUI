@@ -27,7 +27,7 @@ public class ExceptionUI extends JFrame {
 	}
 
 	private void initialize(String errorName, String errorMessage) {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(ExceptionUI.class.getResource("/resources/icon_main.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ExceptionUI.class.getResource("/icons/icon_main.png")));
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(490, 190);

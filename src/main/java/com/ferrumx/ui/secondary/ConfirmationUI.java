@@ -23,7 +23,7 @@ public class ConfirmationUI extends JFrame {
 	}
 
 	private void initialize(String question) {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(ConfirmationUI.class.getResource("/resources/icon_main.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ConfirmationUI.class.getResource("/icons/icon_main.png")));
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		setSize(300,140);

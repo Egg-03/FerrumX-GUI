@@ -40,7 +40,7 @@ public class StatusUI extends JFrame {
 		JPanel contentPane;
 		setVisible(true);
 		setTitle(title);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(StatusUI.class.getResource("/resources/icon_main.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(StatusUI.class.getResource("/icons/icon_main.png")));
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 200);
 		setLocationRelativeTo(null);
@@ -62,42 +62,42 @@ public class StatusUI extends JFrame {
 		statusPanel.add(infoLabel);
 
 		hardwareLabel = new JLabel("HWID");
-		hardwareLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/resources/tab_icons_small/HWID.svg")));
+		hardwareLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/icons/tab_icons_small/HWID.svg")));
 		hardwareLabel.setBounds(20, 47, 85, 20);
 		statusPanel.add(hardwareLabel);
 
 		cpuLabel = new JLabel("CPU");
-		cpuLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/resources/tab_icons_small/CPU.svg")));
+		cpuLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/icons/tab_icons_small/CPU.svg")));
 		cpuLabel.setBounds(20, 79, 85, 20);
 		statusPanel.add(cpuLabel);
 
 		networkLabel = new JLabel("Network");
-		networkLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/resources/tab_icons_small/Network.svg")));
+		networkLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/icons/tab_icons_small/Network.svg")));
 		networkLabel.setBounds(325, 47, 79, 20);
 		statusPanel.add(networkLabel);
 
 		osLabel = new JLabel("OS");
-		osLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/resources/tab_icons_small/OS.svg")));
+		osLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/icons/tab_icons_small/OS.svg")));
 		osLabel.setBounds(325, 79, 79, 20);
 		statusPanel.add(osLabel);
 
 		memoryLabel = new JLabel("Memory");
-		memoryLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/resources/tab_icons_small/RAM.svg")));
+		memoryLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/icons/tab_icons_small/RAM.svg")));
 		memoryLabel.setBounds(115, 47, 93, 20);
 		statusPanel.add(memoryLabel);
 
 		mainboardLabel = new JLabel("Mainboard");
-		mainboardLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/resources/tab_icons_small/MainBoard.svg")));
+		mainboardLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/icons/tab_icons_small/MainBoard.svg")));
 		mainboardLabel.setBounds(218, 47, 97, 20);
 		statusPanel.add(mainboardLabel);
 
 		gpuLabel = new JLabel("GPU");
-		gpuLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/resources/tab_icons_medium/GPU.svg")));
+		gpuLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/icons/tab_icons_medium/GPU.svg")));
 		gpuLabel.setBounds(115, 79, 93, 20);
 		statusPanel.add(gpuLabel);
 
 		storageLabel = new JLabel("Storage");
-		storageLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/resources/tab_icons_small/Storage.svg")));
+		storageLabel.setIcon(new FlatSVGIcon(StatusUI.class.getResource("/icons/tab_icons_small/Storage.svg")));
 		storageLabel.setBounds(218, 79, 97, 20);
 		statusPanel.add(storageLabel);
 		

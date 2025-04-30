@@ -133,7 +133,7 @@ public class Battery extends SwingWorker<List<Map<String, String>>, Void> {
 		Integer ceilCharge = Math.ceilDiv(charge,10)*10; // Round to the ceiling value of the nearest multiple of 10
 		String currentBatteryIndicator = String.valueOf(ceilCharge);
 		
-		batteryChargeIcon.setIcon(new FlatSVGIcon(Battery.class.getResource("/resources/battery_level_images/Battery-"+currentBatteryIndicator+".svg")));
+		batteryChargeIcon.setIcon(new FlatSVGIcon(Battery.class.getResource("/icons/battery_level_images/Battery-"+currentBatteryIndicator+".svg")));
 	}
 
 }

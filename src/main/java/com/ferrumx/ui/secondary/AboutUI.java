@@ -29,6 +29,7 @@ import javax.swing.border.TitledBorder;
 
 import org.tinylog.Logger;
 
+import com.ferrumx.ui.utilities.VersionAndOtherInfo;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class AboutUI extends JFrame {
@@ -43,7 +44,7 @@ public class AboutUI extends JFrame {
 
 	public AboutUI() {
 		setResizable(false);
-		setIconImage(Toolkit.getDefaultToolkit().getImage(AboutUI.class.getResource("/resources/icon_main.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(AboutUI.class.getResource("/icons/icon_main.png")));
 		setBounds(100, 100, 570, 420);
 		setTitle("About FerrumX");
 		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.X_AXIS));
@@ -81,7 +82,7 @@ public class AboutUI extends JFrame {
 		thirdPartyPanel.setLayout(gbl_thirdPartyPanel);
 
 		JLabel themeSupport = new JLabel("Theme Support");
-		themeSupport.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/resources/extra_icons/theme.svg")));
+		themeSupport.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/icons/extra_icons/theme.svg")));
 		GridBagConstraints gbc_themeSupport = new GridBagConstraints();
 		gbc_themeSupport.insets = new Insets(0, 0, 5, 5);
 		gbc_themeSupport.anchor = GridBagConstraints.WEST;
@@ -122,7 +123,7 @@ public class AboutUI extends JFrame {
 		thirdPartyPanel.add(themeSupportLink, gbc_themeSupportLink);
 
 		JLabel svgSupport = new JLabel("SVG Support");
-		svgSupport.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/resources/extra_icons/library.svg")));
+		svgSupport.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/icons/extra_icons/library.svg")));
 		GridBagConstraints gbc_svgSupport = new GridBagConstraints();
 		gbc_svgSupport.anchor = GridBagConstraints.WEST;
 		gbc_svgSupport.insets = new Insets(0, 0, 5, 5);
@@ -163,7 +164,7 @@ public class AboutUI extends JFrame {
 		});
 
 		JLabel iniSupport = new JLabel("INI Support");
-		iniSupport.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/resources/extra_icons/library.svg")));
+		iniSupport.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/icons/extra_icons/library.svg")));
 		GridBagConstraints gbc_iniSupport = new GridBagConstraints();
 		gbc_iniSupport.anchor = GridBagConstraints.WEST;
 		gbc_iniSupport.insets = new Insets(0, 0, 5, 5);
@@ -204,7 +205,7 @@ public class AboutUI extends JFrame {
 		});
 
 		JLabel extraIcons = new JLabel("Extra Icons");
-		extraIcons.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/resources/extra_icons/extension.svg")));
+		extraIcons.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/icons/extra_icons/extension.svg")));
 		GridBagConstraints gbc_extraIcons = new GridBagConstraints();
 		gbc_extraIcons.anchor = GridBagConstraints.WEST;
 		gbc_extraIcons.insets = new Insets(0, 0, 5, 5);
@@ -304,7 +305,7 @@ public class AboutUI extends JFrame {
 
 		JLabel developer = new JLabel("Developer");
 		developer.setToolTipText("Wrapper and UI Developer");
-		developer.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/resources/extra_icons/developer.svg")));
+		developer.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/icons/extra_icons/developer.svg")));
 		GridBagConstraints gbc_developer = new GridBagConstraints();
 		gbc_developer.anchor = GridBagConstraints.WEST;
 		gbc_developer.insets = new Insets(0, 0, 5, 5);
@@ -323,7 +324,7 @@ public class AboutUI extends JFrame {
 
 		JLabel iconMaker = new JLabel("Designer");
 		iconMaker.setToolTipText("Logo and Icon Designer");
-		iconMaker.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/resources/extra_icons/designer.svg")));
+		iconMaker.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/icons/extra_icons/designer.svg")));
 		GridBagConstraints gbc_iconMaker = new GridBagConstraints();
 		gbc_iconMaker.anchor = GridBagConstraints.WEST;
 		gbc_iconMaker.insets = new Insets(0, 0, 0, 5);
@@ -374,11 +375,11 @@ public class AboutUI extends JFrame {
 		mainPanel.add(wrapperVersionPanel, gbc_wrapperVersionPanel);
 		wrapperVersionPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
-		JLabel wrapperVersion = new JLabel("v1.3.3");
+		JLabel wrapperVersion = new JLabel(VersionAndOtherInfo.FERRUMX_VERSION);
 		wrapperVersion.setHorizontalAlignment(SwingConstants.CENTER);
 		wrapperVersionPanel.add(wrapperVersion);
 		wrapperVersion.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 12));
-		wrapperVersion.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/resources/extra_icons/api.svg")));
+		wrapperVersion.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/icons/extra_icons/api.svg")));
 
 		JPanel logoPanel = new JPanel();
 		logoPanel.setBorder(new TitledBorder(null, "Click to open the github page", TitledBorder.LEADING,
@@ -398,7 +399,7 @@ public class AboutUI extends JFrame {
 
 		JLabel logo = new JLabel("");
 		logo.setHorizontalAlignment(SwingConstants.CENTER);
-		logo.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/resources/logo_main_broad.svg")).setColorFilter(new FlatSVGIcon.ColorFilter(Color::brighter)));
+		logo.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/icons/logo_main_broad.svg")).setColorFilter(new FlatSVGIcon.ColorFilter(Color::brighter)));
 		logo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		logo.addMouseListener(new MouseAdapter() {
 			@Override
@@ -426,11 +427,11 @@ public class AboutUI extends JFrame {
 		mainPanel.add(guiVersionPanel, gbc_guiVersionPanel);
 		guiVersionPanel.setLayout(new GridLayout(0, 1, 0, 0));
 
-		JLabel guiVersion = new JLabel("v1.2.0");
+		JLabel guiVersion = new JLabel(VersionAndOtherInfo.APP_VERSION);
 		guiVersion.setHorizontalAlignment(SwingConstants.CENTER);
 		guiVersionPanel.add(guiVersion);
 		guiVersion.setFont(new Font("Segoe UI", Font.BOLD | Font.ITALIC, 12));
-		guiVersion.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/resources/extra_icons/ui.svg")));
+		guiVersion.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/icons/extra_icons/ui.svg")));
 		
 	}
 }
