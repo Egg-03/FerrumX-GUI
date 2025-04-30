@@ -322,7 +322,7 @@ public class AboutUI extends JFrame {
 		contributionPanel.add(developerLink, gbc_developerLink);
 		developerLink.setColumns(10);
 
-		JLabel iconMaker = new JLabel("Designer");
+		JLabel iconMaker = new JLabel("Logo Designer");
 		iconMaker.setToolTipText("Logo and Icon Designer");
 		iconMaker.setIcon(new FlatSVGIcon(AboutUI.class.getResource("/icons/extra_icons/designer.svg")));
 		GridBagConstraints gbc_iconMaker = new GridBagConstraints();
