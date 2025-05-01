@@ -19,6 +19,7 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
@@ -3039,7 +3040,8 @@ public class FerrumX {
 		reportPanel.add(reportAreaPanel, BorderLayout.CENTER);
 		reportAreaPanel.setLayout(new BorderLayout(0, 0));
 		
-		JTextArea reportTextArea = new JTextArea();
+		JEditorPane reportTextArea = new JEditorPane();
+		reportTextArea.setContentType("text/html");
 		reportTextArea.setEditable(false);
 		
 		JScrollPane reportScrollPane = new JScrollPane(reportTextArea);
