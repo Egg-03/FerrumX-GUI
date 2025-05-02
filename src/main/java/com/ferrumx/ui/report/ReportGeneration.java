@@ -91,7 +91,6 @@ public class ReportGeneration  {
 	        	progressBar.setIndeterminate(false);
 	        	progressBar.setValue(100);
 	        	reportButton.setEnabled(true);
-	        	Logger.info(MarkdownToHtml.parse(sb.toString()));
 	        });
 	        
 		} catch (ExecutionException e) {
