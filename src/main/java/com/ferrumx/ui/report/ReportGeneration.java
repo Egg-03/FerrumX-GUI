@@ -11,7 +11,6 @@ import java.util.concurrent.Future;
 
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
-import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
 
 import org.tinylog.Logger;
@@ -40,33 +39,37 @@ public class ReportGeneration  {
 	
 	private JEditorPane reportDisplay;
 	private JButton reportButton;
-	private JProgressBar progressBar;
 	private static final String LINE_BREAK = "<br>"; // NOTE: Flexmark has been set to convert soft breaks into hard breaks
 	private static final String NEWLINE = System.lineSeparator();
 	private static final String MARKDOWN_LINE = NEWLINE+NEWLINE+"---"+NEWLINE+NEWLINE;
 	private static final String MARKDOWN_TABLE_HEADING = NEWLINE+"Properties|Values"+NEWLINE+":---|:---"+NEWLINE;
 	
-	public ReportGeneration (JEditorPane reportDisplay, JButton detailedReportButton, JProgressBar progressBar) {
+	private final StringBuilder finalReport = new StringBuilder();
+	
+	public ReportGeneration (JEditorPane reportDisplay, JButton detailedReportButton) {
 		this.reportDisplay = reportDisplay;
 		this.reportButton = detailedReportButton;
-		this.progressBar = progressBar;
-		
+	}
+	
+	public void generateReportOnScreen() {
 		clearComponentStatuses();
 		new Thread(this::compute).start();
 	}
 	
+	public String getGeneratedReport() { // WARN: To be called only after generateReport has run and the results have been displayed on the JEditorPane or else it will generate partial or empty results
+		return finalReport.toString();
+	}
+	
 	private void clearComponentStatuses() {
+		finalReport.setLength(0); // deletes the old report
 		SwingUtilities.invokeLater(()->{
 			reportDisplay.setText(null);
-			progressBar.setIndeterminate(true);
 			reportButton.setEnabled(false);
 		});
 	}
 	
 	private void compute() {
-		
-		StringBuilder sb = new StringBuilder();
-		
+				
 		try(ExecutorService exec = Executors.newCachedThreadPool()) {
 			
 			List<Future<String>> futureCompute = new ArrayList<>();
@@ -84,13 +87,11 @@ public class ReportGeneration  {
 	        futureCompute.add(exec.submit(this::osDetails));
 	        
 	        for(Future<String> task:futureCompute) {
-	        	sb.append(task.get());
+	        	finalReport.append(task.get());
 	        }
 	        
 	        SwingUtilities.invokeLater(()-> {
-	        	reportDisplay.setText(MarkdownToHtml.parse(sb.toString()));
-	        	progressBar.setIndeterminate(false);
-	        	progressBar.setValue(100);
+	        	reportDisplay.setText(MarkdownToHtml.parse(finalReport.toString()));
 	        	reportButton.setEnabled(true);
 	        });
 	        
