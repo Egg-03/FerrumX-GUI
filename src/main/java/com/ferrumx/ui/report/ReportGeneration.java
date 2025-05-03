@@ -41,6 +41,7 @@ public class ReportGeneration  {
 	private JEditorPane reportDisplay;
 	private JButton reportButton;
 	private JProgressBar progressBar;
+	private static final String LINE_BREAK = "<br>"; // NOTE: Flexmark has been set to convert soft breaks into hard breaks
 	private static final String NEWLINE = System.lineSeparator();
 	private static final String MARKDOWN_LINE = NEWLINE+NEWLINE+"---"+NEWLINE+NEWLINE;
 	private static final String MARKDOWN_TABLE_HEADING = NEWLINE+"Properties|Values"+NEWLINE+":---|:---"+NEWLINE;
@@ -120,7 +121,7 @@ public class ReportGeneration  {
 				cpuDetails.append(" | *"+entries.getKey()+"* | "+entries.getValue()+" | "+NEWLINE);
 			}
 			if(!cpuList.getLast().equals(cpu))
-				cpuDetails.append(MARKDOWN_TABLE_HEADING);
+				cpuDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
 		}
 		return cpuDetails.toString();
 	}
@@ -137,7 +138,7 @@ public class ReportGeneration  {
 					cpuCacheDetails.append(" | *"+currentCache.getKey() + "* | " + currentCache.getValue()+" | "+NEWLINE);
 				}
 				if(!cacheID.getLast().equals(currentCacheID))
-					cpuCacheDetails.append(MARKDOWN_TABLE_HEADING);
+					cpuCacheDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
 			}
 		}
 		return cpuCacheDetails.toString();
@@ -155,7 +156,7 @@ public class ReportGeneration  {
 			}
 			
 			if(!memoryID.getLast().equals(id))
-				memoryDetails.append(MARKDOWN_TABLE_HEADING);
+				memoryDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
 		}
 		return memoryDetails.toString();
 	}
@@ -171,7 +172,7 @@ public class ReportGeneration  {
 				 videoControllerDetails.append(" | *"+entry.getKey()+"* | "+entry.getValue()+" | "+NEWLINE);
 			}
 			if(!gpuIDs.getLast().equals(currentID))
-				videoControllerDetails.append(MARKDOWN_TABLE_HEADING);
+				videoControllerDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
 		}
 		return videoControllerDetails.toString();
 	}
@@ -230,7 +231,7 @@ public class ReportGeneration  {
 				networkDetails.append(" | *"+entry.getKey()+"* | "+entry.getValue()+" | "+NEWLINE);
 			}
 			if(!deviceIDs.getLast().equals(currentID))
-				networkDetails.append(MARKDOWN_TABLE_HEADING);
+				networkDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
 		}
 		return networkDetails.toString();
 	}
@@ -253,7 +254,7 @@ public class ReportGeneration  {
 				diskDetails.append(" | " + currentPartition + " | "+ Win32_LogicalDiskToPartition.getDriveLetter(currentPartition)+" |\n");
 			}
 			if(!diskID.getLast().equals(id))
-				diskDetails.append(MARKDOWN_TABLE_HEADING);
+				diskDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
 		}
 		return diskDetails.toString();
 	}
@@ -269,7 +270,7 @@ public class ReportGeneration  {
 				osDetails.append(" | *"+entry.getKey()+"* | "+entry.getValue()+" | "+NEWLINE);
 			}
 			if(!oslist.getLast().equals(currentOS))
-				osDetails.append(MARKDOWN_TABLE_HEADING);
+				osDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
 		}
 		return osDetails.toString();
 	}

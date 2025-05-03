@@ -20,8 +20,8 @@ public class MarkdownToHtml {
        
         options.set(Parser.EXTENSIONS, Arrays.asList(TablesExtension.create(), StrikethroughExtension.create()));
 
-        // uncomment to convert soft-breaks to hard breaks
-        //options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
+        //convert soft-breaks to hard breaks
+        options.set(HtmlRenderer.SOFT_BREAK, "<br />\n");
 
         Parser parser = Parser.builder(options).build();
         HtmlRenderer renderer = HtmlRenderer.builder(options).build();
