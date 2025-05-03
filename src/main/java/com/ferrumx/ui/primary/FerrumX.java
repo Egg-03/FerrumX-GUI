@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,13 +20,13 @@ import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
@@ -64,6 +65,7 @@ import com.ferrumx.ui.themes.DarkTheme;
 import com.ferrumx.ui.themes.LightTheme;
 import com.ferrumx.ui.utilities.DateTime;
 import com.ferrumx.ui.utilities.Elevation;
+import com.ferrumx.ui.utilities.MarkdownToHtml;
 import com.ferrumx.ui.utilities.ThemeManager;
 import com.ferrumx.ui.utilities.UIManagerConfigurations;
 import com.formdev.flatlaf.FlatLaf;
@@ -3039,7 +3041,8 @@ public class FerrumX {
 		reportPanel.add(reportAreaPanel, BorderLayout.CENTER);
 		reportAreaPanel.setLayout(new BorderLayout(0, 0));
 		
-		JTextArea reportTextArea = new JTextArea();
+		JEditorPane reportTextArea = new JEditorPane();
+		reportTextArea.setContentType("text/html");
 		reportTextArea.setEditable(false);
 		
 		JScrollPane reportScrollPane = new JScrollPane(reportTextArea);
@@ -3053,21 +3056,25 @@ public class FerrumX {
 		reportControlPanel.setLayout(new BoxLayout(reportControlPanel, BoxLayout.X_AXIS));
 		reportPanel.add(reportControlPanel, BorderLayout.SOUTH);
 		
-		JButton generateReport = new JButton("Generate Report");
-		reportControlPanel.add(generateReport);
+		JButton generateReportOnScreenButton = new JButton("Generate Report");
+		reportControlPanel.add(generateReportOnScreenButton);
 		
-		JProgressBar progressBar = new JProgressBar();
-		reportControlPanel.add(progressBar);
+		ReportGeneration rg = new ReportGeneration(reportTextArea, generateReportOnScreenButton);
 		
-		JButton copyReport = new JButton("Copy Report");
-		copyReport.addActionListener(e-> {
-			reportTextArea.selectAll();
-			reportTextArea.copy();
-		});
-		reportControlPanel.add(copyReport);
+		JButton copyReportMarkdown = new JButton("Copy Markdown");
+		reportControlPanel.add(copyReportMarkdown);
 		
-		generateReport.addActionListener(e-> new ReportGeneration(reportTextArea, generateReport, progressBar));
+		JButton copyReportHtml = new JButton("Copy HTML");
+		reportControlPanel.add(copyReportHtml);
 		
+		generateReportOnScreenButton.addActionListener(e-> rg.generateReportOnScreen());
+		copyReportMarkdown.addActionListener(e-> Toolkit.getDefaultToolkit().
+				getSystemClipboard().
+				setContents(new StringSelection(rg.getGeneratedReport()), null));
+		
+		copyReportHtml.addActionListener(e-> Toolkit.getDefaultToolkit()
+				.getSystemClipboard()
+				.setContents(new StringSelection(MarkdownToHtml.parse(rg.getGeneratedReport())), null));	
 	}
 	private void initializeSystemInfo() {
 		new HardwareId(hwidTf).execute();
