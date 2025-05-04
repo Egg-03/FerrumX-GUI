@@ -82,44 +82,44 @@ public class FerrumX {
 	private JLabel cpuLogo; // contains logo or image
 	private JComboBox<String> cpuChoiceComboBox;
 	private JTextArea cacheTa;
-	private List<JTextField> cpuFields = new ArrayList<>();
+	private final List<JTextField> cpuFields = new ArrayList<>();
 	
 	// Memory
 	private JComboBox<String> memorySlotChoice;
-	private List<JTextField> memoryFields = new ArrayList<>();
+	private final List<JTextField> memoryFields = new ArrayList<>();
 	
 	// Mainboard and BIOS
-	private List<JTextField> mainboardFields = new ArrayList<>();
+	private final List<JTextField> mainboardFields = new ArrayList<>();
 	
 	// GPU
 	private JLabel gpuLogo; // contains logo or image
 	private JComboBox<String> gpuChoiceComboBox;
-	private List<JTextField> gpuFields = new ArrayList<>();
+	private final List<JTextField> gpuFields = new ArrayList<>();
 	
 	// Network
 	private JComboBox<String> netConnectionChoiceBox;
-	private List<JTextField> networkFields = new ArrayList<>();
+	private final List<JTextField> networkFields = new ArrayList<>();
 	
 	// Disk
 	private JComboBox<String> diskIndexChoiceBox;
 	private JTextArea partitionArea;
-	private List<JTextField> storageFields = new ArrayList<>();
+	private final List<JTextField> storageFields = new ArrayList<>();
 	
 	// OS
 	private JLabel osCoverImg; // contains logo or img
 	private JComboBox<String> currentOsChoiceBox;
-	private List<JTextField> osFields = new ArrayList<>();
+	private final List<JTextField> osFields = new ArrayList<>();
 	
 	// Time-Zone
-	private List<JTextField> timeZoneFields = new ArrayList<>();
+	private final List<JTextField> timeZoneFields = new ArrayList<>();
 	
 	// Battery
 	private JLabel batteryChargeIcon; // the icon representing the current charge level on the battery
 	private JLabel batteryChargePercentage; // the charge percentage on the battery icon panel
-	private List<JTextField> batteryFields = new ArrayList<>();
+	private final List<JTextField> batteryFields = new ArrayList<>();
 
 	// Links
-	private String appLatestReleasePage = "https://github.com/Egg-03/FerrumX-GUI/releases/latest";
+	private static final String APP_LATEST_RELEASE_PAGE = "https://github.com/Egg-03/FerrumX-GUI/releases/latest";
 
 	
 	
@@ -135,7 +135,7 @@ public class FerrumX {
 			UIManagerConfigurations.enableTabSeparators(true);
 			
 		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException| UnsupportedLookAndFeelException e) {
-			new ExceptionUI("UI Manager Themeing Error", "Error: "+e.getMessage());
+			new ExceptionUI("UI Manager Theming Error", "Error: "+e.getMessage());
 			Logger.error(e);
 		}
 
@@ -280,7 +280,7 @@ public class FerrumX {
 			ConfirmationUI confirm = new ConfirmationUI("Github Releases","This will open a new browser window. Continue ?");
 			confirm.getBtnYes().addActionListener(e1->{
 				try {
-					Desktop.getDesktop().browse(new URI(appLatestReleasePage));
+					Desktop.getDesktop().browse(new URI(APP_LATEST_RELEASE_PAGE));
 					confirm.dispose();
 				} catch (URISyntaxException | IOException ex) {
 					new ExceptionUI("Github Release Page Visit Error", ex.getMessage());
@@ -2832,13 +2832,13 @@ public class FerrumX {
 		batteryPanelOne.add(batteryStatusTf, gbc_batteryStatusTf);
 		batteryStatusTf.setColumns(10);
 		
-		JLabel battryStatusTwo = new JLabel("Battery Status");
-		GridBagConstraints gbc_battryStatusTwo = new GridBagConstraints();
-		gbc_battryStatusTwo.anchor = GridBagConstraints.EAST;
-		gbc_battryStatusTwo.insets = new Insets(0, 0, 5, 5);
-		gbc_battryStatusTwo.gridx = 0;
-		gbc_battryStatusTwo.gridy = 2;
-		batteryPanelOne.add(battryStatusTwo, gbc_battryStatusTwo);
+		JLabel batteryStatusTwo = new JLabel("Battery Status");
+		GridBagConstraints gbc_batteryStatusTwo = new GridBagConstraints();
+		gbc_batteryStatusTwo.anchor = GridBagConstraints.EAST;
+		gbc_batteryStatusTwo.insets = new Insets(0, 0, 5, 5);
+		gbc_batteryStatusTwo.gridx = 0;
+		gbc_batteryStatusTwo.gridy = 2;
+		batteryPanelOne.add(batteryStatusTwo, gbc_batteryStatusTwo);
 		
 		JTextField batteryStatusTwoTf = new JTextField();
 		batteryStatusTwoTf.setEditable(false);
@@ -2994,15 +2994,15 @@ public class FerrumX {
 		gbc_batteryCapacity.gridy = 2;
 		batteryPanelTwo.add(batteryCapacity, gbc_batteryCapacity);
 		
-		JTextField batteryCapcityTf = new JTextField();
-		batteryCapcityTf.setEditable(false);
-		GridBagConstraints gbc_batteryCapcityTf = new GridBagConstraints();
-		gbc_batteryCapcityTf.insets = new Insets(0, 0, 5, 0);
-		gbc_batteryCapcityTf.fill = GridBagConstraints.HORIZONTAL;
-		gbc_batteryCapcityTf.gridx = 1;
-		gbc_batteryCapcityTf.gridy = 2;
-		batteryPanelTwo.add(batteryCapcityTf, gbc_batteryCapcityTf);
-		batteryCapcityTf.setColumns(10);
+		JTextField batteryCapacityTf = new JTextField();
+		batteryCapacityTf.setEditable(false);
+		GridBagConstraints gbc_batteryCapacityTf = new GridBagConstraints();
+		gbc_batteryCapacityTf.insets = new Insets(0, 0, 5, 0);
+		gbc_batteryCapacityTf.fill = GridBagConstraints.HORIZONTAL;
+		gbc_batteryCapacityTf.gridx = 1;
+		gbc_batteryCapacityTf.gridy = 2;
+		batteryPanelTwo.add(batteryCapacityTf, gbc_batteryCapacityTf);
+		batteryCapacityTf.setColumns(10);
 		
 		JLabel batteryVoltage = new JLabel("Voltage");
 		GridBagConstraints gbc_batteryVoltage = new GridBagConstraints();
@@ -3024,7 +3024,7 @@ public class FerrumX {
 
 		batteryFields.addAll(
 				List.of(batteryCaptionTf, batteryStatusTf, batteryStatusTwoTf, batteryChemistryTf, batteryChargeTf,
-						batteryRuntimeTf, batteryNameTf, batteryDeviceIDTf, batteryCapcityTf, batteryVoltageTf));
+						batteryRuntimeTf, batteryNameTf, batteryDeviceIDTf, batteryCapacityTf, batteryVoltageTf));
 		// refresh button action
 		refresh.addActionListener(e->new Battery(batteryChargeIcon, batteryChargePercentage, batteryFields).execute());
 	}

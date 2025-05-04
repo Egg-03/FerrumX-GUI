@@ -19,8 +19,8 @@ import com.ferrumx.ui.secondary.ExceptionUI;
 
 public class Network extends SwingWorker<List<Map<String, String>>, List<String>> {
 	
-	private JComboBox<String> networkChoice;
-	private List<JTextField> networkFields;
+	private final JComboBox<String> networkChoice;
+	private final List<JTextField> networkFields;
 	
 	public Network(JComboBox<String> networkChoice, List<JTextField> networkFields) {
 		this.networkChoice = networkChoice;
@@ -85,8 +85,8 @@ public class Network extends SwingWorker<List<Map<String, String>>, List<String>
 
 class NetworkAdapterListener extends SwingWorker<List<Map<String, String>>, Void>{
 	
-	private JComboBox<String> networkChoice;
-	private List<JTextField> networkFields;
+	private final JComboBox<String> networkChoice;
+	private final List<JTextField> networkFields;
 	
 	public NetworkAdapterListener(JComboBox<String> networkChoice, List<JTextField> networkFields) {
 		this.networkChoice = networkChoice;

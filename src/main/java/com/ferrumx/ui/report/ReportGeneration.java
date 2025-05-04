@@ -37,8 +37,8 @@ import com.ferrumx.ui.utilities.MarkdownToHtml;
 
 public class ReportGeneration  {
 	
-	private JEditorPane reportDisplay;
-	private JButton reportButton;
+	private final JEditorPane reportDisplay;
+	private final JButton reportButton;
 	private static final String LINE_BREAK = "<br>"; // NOTE: Flexmark has been set to convert soft breaks into hard breaks
 	private static final String NEWLINE = System.lineSeparator();
 	private static final String MARKDOWN_LINE = NEWLINE+NEWLINE+"---"+NEWLINE+NEWLINE;
@@ -107,39 +107,37 @@ public class ReportGeneration  {
 	}
 	
 	private String hwid() throws ExecutionException, InterruptedException {
-		StringBuilder hwid = new StringBuilder();
-		hwid.append("## HARDWARE ID"+NEWLINE+"*"+HardwareID.getHardwareID()+"*");
-		return hwid.toString();
+        return "## HARDWARE ID" + NEWLINE + "*" + HardwareID.getHardwareID() + "*";
 	}
 	
 	private String cpu() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException {
 		StringBuilder cpuDetails = new StringBuilder();
-		cpuDetails.append(MARKDOWN_LINE+"## CPU"+MARKDOWN_TABLE_HEADING);
+		cpuDetails.append(MARKDOWN_LINE).append("## CPU").append(MARKDOWN_TABLE_HEADING);
 		List<String> cpuList = Win32_Processor.getProcessorList();
 		for(String cpu:cpuList) {
 			Map<String, String> cpuProperties = Win32_Processor.getCurrentProcessor(cpu);
 			for(Map.Entry<String, String> entries: cpuProperties.entrySet()) {
-				cpuDetails.append(" | *"+entries.getKey()+"* | "+entries.getValue()+" | "+NEWLINE);
+				cpuDetails.append(" | *").append(entries.getKey()).append("* | ").append(entries.getValue()).append(" | ").append(NEWLINE);
 			}
 			if(!cpuList.getLast().equals(cpu))
-				cpuDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
+				cpuDetails.append(LINE_BREAK).append(NEWLINE).append(MARKDOWN_TABLE_HEADING);
 		}
 		return cpuDetails.toString();
 	}
 	
 	private String cpuCache() throws IOException, IndexOutOfBoundsException, ShellException, InterruptedException {
 		StringBuilder cpuCacheDetails = new StringBuilder();
-		cpuCacheDetails.append(MARKDOWN_LINE+"## CPU CACHE"+MARKDOWN_TABLE_HEADING);
+		cpuCacheDetails.append(MARKDOWN_LINE).append("## CPU CACHE").append(MARKDOWN_TABLE_HEADING);
 		List<String> cpuID = Win32_Processor.getProcessorList();
 		for (String id : cpuID) {
 			List<String> cacheID = Win32_AssociatedProcessorMemory.getCacheID(id);
 			for (String currentCacheID : cacheID) {
 				Map<String, String> cache = Win32_CacheMemory.getCPUCache(currentCacheID);
 				for (Map.Entry<String, String> currentCache : cache.entrySet()) {
-					cpuCacheDetails.append(" | *"+currentCache.getKey() + "* | " + currentCache.getValue()+" | "+NEWLINE);
+					cpuCacheDetails.append(" | *").append(currentCache.getKey()).append("* | ").append(currentCache.getValue()).append(" | ").append(NEWLINE);
 				}
 				if(!cacheID.getLast().equals(currentCacheID))
-					cpuCacheDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
+					cpuCacheDetails.append(LINE_BREAK).append(NEWLINE).append(MARKDOWN_TABLE_HEADING);
 			}
 		}
 		return cpuCacheDetails.toString();
@@ -147,43 +145,43 @@ public class ReportGeneration  {
 	
 	private String physicalMemory() throws IOException, IndexOutOfBoundsException, ShellException, InterruptedException {
 		StringBuilder memoryDetails = new StringBuilder();
-		memoryDetails.append(MARKDOWN_LINE+"## PHYSICAL MEMORY"+MARKDOWN_TABLE_HEADING);
+		memoryDetails.append(MARKDOWN_LINE).append("## PHYSICAL MEMORY").append(MARKDOWN_TABLE_HEADING);
 		List<String> memoryID = Win32_PhysicalMemory.getTag();
 		
 		for (String id : memoryID) {
 			Map<String, String> memory = Win32_PhysicalMemory.getMemory(id);
 			for (Map.Entry<String, String> entry : memory.entrySet()) {
-				memoryDetails.append(" | *"+entry.getKey()+"* | "+entry.getValue()+" | "+NEWLINE);
+				memoryDetails.append(" | *").append(entry.getKey()).append("* | ").append(entry.getValue()).append(" | ").append(NEWLINE);
 			}
 			
 			if(!memoryID.getLast().equals(id))
-				memoryDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
+				memoryDetails.append(LINE_BREAK).append(NEWLINE).append(MARKDOWN_TABLE_HEADING);
 		}
 		return memoryDetails.toString();
 	}
 	
 	private String videoController() throws IOException, IndexOutOfBoundsException, ShellException, InterruptedException {
 		StringBuilder videoControllerDetails = new StringBuilder();
-		videoControllerDetails.append(MARKDOWN_LINE+"## VIDEO CONTROLLER"+MARKDOWN_TABLE_HEADING);
+		videoControllerDetails.append(MARKDOWN_LINE).append("## VIDEO CONTROLLER").append(MARKDOWN_TABLE_HEADING);
 		List<String> gpuIDs = Win32_VideoController.getGPUID();
 	
 		for (String currentID : gpuIDs) {
 			Map<String, String> currentGPU = Win32_VideoController.getGPU(currentID);
 			for (Map.Entry<String, String> entry : currentGPU.entrySet()) {
-				 videoControllerDetails.append(" | *"+entry.getKey()+"* | "+entry.getValue()+" | "+NEWLINE);
+				 videoControllerDetails.append(" | *").append(entry.getKey()).append("* | ").append(entry.getValue()).append(" | ").append(NEWLINE);
 			}
 			if(!gpuIDs.getLast().equals(currentID))
-				videoControllerDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
+				videoControllerDetails.append(LINE_BREAK).append(NEWLINE).append(MARKDOWN_TABLE_HEADING);
 		}
 		return videoControllerDetails.toString();
 	}
 	
 	private String mainBoard() throws IOException, IndexOutOfBoundsException, ShellException, InterruptedException {
 		StringBuilder mainboardDetails = new StringBuilder();
-		mainboardDetails.append(MARKDOWN_LINE+"## MAINBOARD"+MARKDOWN_TABLE_HEADING);
+		mainboardDetails.append(MARKDOWN_LINE).append("## MAINBOARD").append(MARKDOWN_TABLE_HEADING);
 		Map<String, String> motherboard = Win32_Baseboard.getMotherboard();
 		for (Map.Entry<String, String> entry : motherboard.entrySet()) {
-			mainboardDetails.append(" | *"+entry.getKey()+"* | "+entry.getValue()+" | "+NEWLINE);
+			mainboardDetails.append(" | *").append(entry.getKey()).append("* | ").append(entry.getValue()).append(" | ").append(NEWLINE);
 		}
 		
 		return mainboardDetails.toString();
@@ -191,10 +189,10 @@ public class ReportGeneration  {
 	
 	private String bios() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException {
 		StringBuilder biosDetails = new StringBuilder();
-		biosDetails.append(MARKDOWN_LINE+"## BIOS"+MARKDOWN_TABLE_HEADING);
+		biosDetails.append(MARKDOWN_LINE).append("## BIOS").append(MARKDOWN_TABLE_HEADING);
 		Map<String, String> BIOS = Win32_BIOS.getPrimaryBIOS();
 		for (Map.Entry<String, String> entry : BIOS.entrySet()) {
-			biosDetails.append(" | *"+entry.getKey()+"* | "+entry.getValue()+" | "+NEWLINE);
+			biosDetails.append(" | *").append(entry.getKey()).append("* | ").append(entry.getValue()).append(" | ").append(NEWLINE);
 		}
 		
 		return biosDetails.toString();
@@ -202,12 +200,12 @@ public class ReportGeneration  {
 	
 	private String mainboardPorts() throws IOException, IndexOutOfBoundsException, ShellException, InterruptedException {
 		StringBuilder mainboardPortDetails = new StringBuilder();
-		mainboardPortDetails.append(MARKDOWN_LINE+"## IO PORTS"+MARKDOWN_TABLE_HEADING);
+		mainboardPortDetails.append(MARKDOWN_LINE).append("## IO PORTS").append(MARKDOWN_TABLE_HEADING);
 		List<String> portID = Win32_PortConnector.getBaseboardPortID();
 		for (String id : portID) {
 			Map<String, String> ports = Win32_PortConnector.getBaseboardPorts(id);
 			for (Map.Entry<String, String> port : ports.entrySet()) {
-				mainboardPortDetails.append(" | *"+port.getKey()+"* | "+port.getValue()+" | "+NEWLINE);
+				mainboardPortDetails.append(" | *").append(port.getKey()).append("* | ").append(port.getValue()).append(" | ").append(NEWLINE);
 			}
 		}
 		return mainboardPortDetails.toString();
@@ -215,7 +213,7 @@ public class ReportGeneration  {
 	
 	private String networkAdapters() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException {
 		StringBuilder networkDetails = new StringBuilder();
-		networkDetails.append(MARKDOWN_LINE+"## NETWORK ADAPTERS"+MARKDOWN_TABLE_HEADING);
+		networkDetails.append(MARKDOWN_LINE).append("## NETWORK ADAPTERS").append(MARKDOWN_TABLE_HEADING);
 		List<String> deviceIDs = Win32_NetworkAdapter.getDeviceIDList();
 		
 		for (String currentID : deviceIDs) {
@@ -225,21 +223,21 @@ public class ReportGeneration  {
 			Map<String, String> networkAdapterConfiguration = Win32_NetworkAdapterConfiguration.getAdapterConfiguration(index);
 			
 			for (Map.Entry<String, String> entry : networkAdapter.entrySet()) {
-				networkDetails.append(" | *"+entry.getKey()+"* | "+entry.getValue()+" | "+NEWLINE);
+				networkDetails.append(" | *").append(entry.getKey()).append("* | ").append(entry.getValue()).append(" | ").append(NEWLINE);
 			}
 			
 			for (Map.Entry<String, String> entry : networkAdapterConfiguration.entrySet()) {
-				networkDetails.append(" | *"+entry.getKey()+"* | "+entry.getValue()+" | "+NEWLINE);
+				networkDetails.append(" | *").append(entry.getKey()).append("* | ").append(entry.getValue()).append(" | ").append(NEWLINE);
 			}
 			if(!deviceIDs.getLast().equals(currentID))
-				networkDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
+				networkDetails.append(LINE_BREAK).append(NEWLINE).append(MARKDOWN_TABLE_HEADING);
 		}
 		return networkDetails.toString();
 	}
 	
 	private String diskDetails() throws IOException, IndexOutOfBoundsException, ShellException, InterruptedException {
 		StringBuilder diskDetails = new StringBuilder();
-		diskDetails.append(MARKDOWN_LINE+"## STORAGE"+MARKDOWN_TABLE_HEADING);
+		diskDetails.append(MARKDOWN_LINE).append("## STORAGE").append(MARKDOWN_TABLE_HEADING);
 		List<String> diskID = Win32_DiskDrive.getDriveID();
 
 		for (String id : diskID) {
@@ -247,31 +245,31 @@ public class ReportGeneration  {
 			
 			List<String> diskPartition = Win32_DiskDriveToDiskPartition.getPartitionList(id);
 			for (Map.Entry<String, String> entry : disk.entrySet()) {
-				diskDetails.append(" | *"+entry.getKey()+"* | "+entry.getValue()+" |\n");
+				diskDetails.append(" | *").append(entry.getKey()).append("* | ").append(entry.getValue()).append(" |\n");
 			}
 			
-			diskDetails.append(NEWLINE+"Partition|Drive Letter"+NEWLINE+":---|:---"+NEWLINE);
+			diskDetails.append(NEWLINE).append("Partition|Drive Letter").append(NEWLINE).append(":---|:---").append(NEWLINE);
 			for (String currentPartition : diskPartition) {
-				diskDetails.append(" | " + currentPartition + " | "+ Win32_LogicalDiskToPartition.getDriveLetter(currentPartition)+" |\n");
+				diskDetails.append(" | ").append(currentPartition).append(" | ").append(Win32_LogicalDiskToPartition.getDriveLetter(currentPartition)).append(" |\n");
 			}
 			if(!diskID.getLast().equals(id))
-				diskDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
+				diskDetails.append(LINE_BREAK).append(NEWLINE).append(MARKDOWN_TABLE_HEADING);
 		}
 		return diskDetails.toString();
 	}
 	
 	private String osDetails() throws IndexOutOfBoundsException, IOException, ShellException, InterruptedException {
 		StringBuilder osDetails = new StringBuilder();
-		osDetails.append(MARKDOWN_LINE+"## OPERATING SYSTEM"+MARKDOWN_TABLE_HEADING);
+		osDetails.append(MARKDOWN_LINE).append("## OPERATING SYSTEM").append(MARKDOWN_TABLE_HEADING);
 		List<String> oslist = Win32_OperatingSystem.getOSList();
 		for (String currentOS : oslist) {
 			Map<String, String> osinfo = Win32_OperatingSystem.getOSInfo(currentOS);
 
 			for (Map.Entry<String, String> entry : osinfo.entrySet()) {
-				osDetails.append(" | *"+entry.getKey()+"* | "+entry.getValue()+" | "+NEWLINE);
+				osDetails.append(" | *").append(entry.getKey()).append("* | ").append(entry.getValue()).append(" | ").append(NEWLINE);
 			}
 			if(!oslist.getLast().equals(currentOS))
-				osDetails.append(LINE_BREAK+NEWLINE+MARKDOWN_TABLE_HEADING);
+				osDetails.append(LINE_BREAK).append(NEWLINE).append(MARKDOWN_TABLE_HEADING);
 		}
 		return osDetails.toString();
 	}

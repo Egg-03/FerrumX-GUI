@@ -19,9 +19,9 @@ import com.ferrumx.ui.utilities.IconImageChooser;
 
 public class Gpu extends SwingWorker<Map<String, String>, List<String>> {
 	
-	private JLabel gpuIcon;
-	private JComboBox<String> gpuChoice;
-	private List<JTextField> gpuFields;
+	private final JLabel gpuIcon;
+	private final JComboBox<String> gpuChoice;
+	private final List<JTextField> gpuFields;
 	
 	public Gpu(JLabel gpuIcon, JComboBox<String> gpuChoice, List<JTextField> gpuFields) {
 		this.gpuIcon = gpuIcon;
@@ -68,8 +68,8 @@ public class Gpu extends SwingWorker<Map<String, String>, List<String>> {
 			gpuFields.get(11).setText(gpuProperties.get("DriverDate"));
 			gpuFields.get(12).setText(gpuProperties.get("VideoProcessor"));
 
-			Long adapterRAM = Long.valueOf(gpuProperties.get("AdapterRAM")) / (1024 * 1024);
-			gpuFields.get(9).setText(String.valueOf(adapterRAM) + " MB");
+			Long adapterRAM = Long.parseLong(gpuProperties.get("AdapterRAM")) / (1024 * 1024);
+			gpuFields.get(9).setText(adapterRAM + " MB");
 			
 			gpuChoice.addActionListener(e-> new GpuActionListener(gpuIcon, gpuChoice, gpuFields).execute());
 		} catch (ExecutionException e) {
@@ -88,9 +88,9 @@ public class Gpu extends SwingWorker<Map<String, String>, List<String>> {
 
 class GpuActionListener extends SwingWorker<Map<String, String>, Void> {
 	
-	private JLabel gpuIcon;
-	private JComboBox<String> gpuChoice;
-	private List<JTextField> gpuFields;
+	private final JLabel gpuIcon;
+	private final JComboBox<String> gpuChoice;
+	private final List<JTextField> gpuFields;
 	
 	public GpuActionListener(JLabel gpuIcon, JComboBox<String> gpuChoice, List<JTextField> gpuFields) {
 		this.gpuIcon = gpuIcon;
@@ -125,12 +125,11 @@ class GpuActionListener extends SwingWorker<Map<String, String>, Void> {
 			gpuFields.get(11).setText(gpuProperties.get("DriverDate"));
 			gpuFields.get(12).setText(gpuProperties.get("VideoProcessor"));
 
-			Long adapterRAM = Long.valueOf(gpuProperties.get("AdapterRAM")) / (1024 * 1024);
-			gpuFields.get(9).setText(String.valueOf(adapterRAM) + " MB");
+			Long adapterRAM = Long.parseLong(gpuProperties.get("AdapterRAM")) / (1024 * 1024);
+			gpuFields.get(9).setText(adapterRAM + " MB");
 		} catch (ExecutionException e) {
 			new ExceptionUI("GPU Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);
-			e.printStackTrace();
 		} catch (NumberFormatException e1) {
 			gpuFields.get(9).setText("N/A"); // sets VRAM field to N/A in case the adapterRAM property cannot be parsed into a Long value
 		}  catch (InterruptedException e) {

@@ -17,9 +17,9 @@ import com.ferrumx.ui.utilities.IconImageChooser;
 
 public class OperatingSystem extends SwingWorker<Map<String, String>, List<String>> {
 	
-	private JLabel osLogo;
-	private JComboBox<String> osChoice;
-	private List<JTextField> osFields;
+	private final JLabel osLogo;
+	private final JComboBox<String> osChoice;
+	private final List<JTextField> osFields;
 	
 	public OperatingSystem(JLabel osLogo, JComboBox<String> osChoice, List<JTextField> osFields) {
 		this.osLogo = osLogo;
@@ -87,9 +87,9 @@ public class OperatingSystem extends SwingWorker<Map<String, String>, List<Strin
 
 class OsActionListener extends SwingWorker<Map<String, String>, Void>{
 	
-	private JLabel osLogo;
-	private JComboBox<String> osChoice;
-	private List<JTextField> osFields;
+	private final JLabel osLogo;
+	private final JComboBox<String> osChoice;
+	private final List<JTextField> osFields;
 	
 	public OsActionListener(JLabel osLogo, JComboBox<String> osChoice, List<JTextField> osFields) {
 		this.osLogo = osLogo;

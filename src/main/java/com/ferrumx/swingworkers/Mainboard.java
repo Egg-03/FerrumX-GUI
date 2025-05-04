@@ -17,7 +17,7 @@ import com.ferrumx.ui.secondary.ExceptionUI;
 
 public class Mainboard extends SwingWorker<List<Map<String, String>>, Void> {
 	
-	private List<JTextField> mainboardFields;
+	private final List<JTextField> mainboardFields;
 	
 	public Mainboard(List<JTextField> mainboardFields) {
 		this.mainboardFields=mainboardFields;

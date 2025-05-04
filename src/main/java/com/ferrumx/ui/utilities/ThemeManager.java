@@ -20,7 +20,7 @@ public class ThemeManager {
     	throw new IllegalStateException("Utility Class");
     }
     public static void registerTheme(String themeName) {
-    	if(!themeName.isBlank() || !themeName.isEmpty()) {
+    	if(!themeName.isBlank()) {
     		prefs.put(THEME_PREF_KEY, themeName);
     	}
     }

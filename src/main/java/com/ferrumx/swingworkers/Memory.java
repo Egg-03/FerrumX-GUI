@@ -17,8 +17,8 @@ import com.ferrumx.ui.secondary.ExceptionUI;
 
 public class Memory extends SwingWorker<Map<String, String>, List<String>> {
 	
-	private JComboBox<String> memoryChoice;
-	private List<JTextField> memoryFields;
+	private final JComboBox<String> memoryChoice;
+	private final List<JTextField> memoryFields;
 	
 	public Memory(JComboBox<String> memoryChoice, List<JTextField> memoryFields) {
 		this.memoryChoice = memoryChoice;
@@ -60,8 +60,8 @@ public class Memory extends SwingWorker<Map<String, String>, List<String>> {
 			memoryFields.get(11).setText(memoryProperties.get("DeviceLocator"));
 			memoryFields.get(12).setText(memoryProperties.get("SerialNumber"));
 
-			Long memoryCapacity = Long.valueOf(memoryProperties.get("Capacity")) / (1024 * 1024);
-			memoryFields.get(7).setText((String.valueOf(memoryCapacity) + " MB"));
+			Long memoryCapacity = Long.parseLong(memoryProperties.get("Capacity")) / (1024 * 1024);
+			memoryFields.get(7).setText((memoryCapacity + " MB"));
 			
 			memoryChoice.addActionListener(e-> new MemoryActionListener(memoryChoice, memoryFields).execute());
 		} catch (ExecutionException e) {
@@ -81,8 +81,8 @@ public class Memory extends SwingWorker<Map<String, String>, List<String>> {
 
 class MemoryActionListener extends SwingWorker<Map<String, String>, Void> {
 	
-	private JComboBox<String> memoryChoice;
-	private List<JTextField> memoryFields;
+	private final JComboBox<String> memoryChoice;
+	private final List<JTextField> memoryFields;
 	
 	public MemoryActionListener(JComboBox<String> memoryChoice, List<JTextField> memoryFields) {
 		this.memoryChoice = memoryChoice;
@@ -112,8 +112,8 @@ class MemoryActionListener extends SwingWorker<Map<String, String>, Void> {
 			memoryFields.get(11).setText(memoryProperties.get("DeviceLocator"));
 			memoryFields.get(12).setText(memoryProperties.get("SerialNumber"));
 
-			Long memoryCapacity = Long.valueOf(memoryProperties.get("Capacity")) / (1024 * 1024);
-			memoryFields.get(7).setText((String.valueOf(memoryCapacity) + " MB"));
+			Long memoryCapacity = Long.parseLong(memoryProperties.get("Capacity")) / (1024 * 1024);
+			memoryFields.get(7).setText((memoryCapacity + " MB"));
 		} catch (ExecutionException e) {
 			new ExceptionUI("Memory Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
 			Logger.error(e);

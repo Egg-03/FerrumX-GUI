@@ -2,6 +2,7 @@ package com.ferrumx.ui.secondary;
 
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.io.Serial;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -13,7 +14,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.TitledBorder;
 
 public class ConfirmationUI extends JFrame {
-	private static final long serialVersionUID = -4503451098970252115L;
+	@Serial
+    private static final long serialVersionUID = -4503451098970252115L;
 	private JButton btnYes;
 	private JButton btnNo;
 	

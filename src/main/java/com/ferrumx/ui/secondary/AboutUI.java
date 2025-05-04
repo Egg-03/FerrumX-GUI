@@ -12,6 +12,7 @@ import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.io.Serial;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -33,14 +34,15 @@ import com.ferrumx.ui.utilities.VersionAndOtherInfo;
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class AboutUI extends JFrame {
+	@Serial
 	private static final long serialVersionUID = 4517185644185035860L;
-	private static String appLink = "https://github.com/Egg-03/FerrumX";
-	private static String devLink = "https://github.com/Egg-03";
-	private static String iconLink = "https://github.com/Soumil-Biswas";
-	private static String themeLink = "https://github.com/JFormDesigner/FlatLaf";
-	private static String svgLink = "https://github.com/weisJ/jsvg";
-	private static String iniLink = "https://ini4j.sourceforge.net/";
-	private static String extraIconLink = "https://github.com/google/material-design-icons";
+	private static final String appLink = "https://github.com/Egg-03/FerrumX";
+	private static final String devLink = "https://github.com/Egg-03";
+	private static final String iconLink = "https://github.com/Soumil-Biswas";
+	private static final String themeLink = "https://github.com/JFormDesigner/FlatLaf";
+	private static final String svgLink = "https://github.com/weisJ/jsvg";
+	private static final String iniLink = "https://ini4j.sourceforge.net/";
+	private static final String extraIconLink = "https://github.com/google/material-design-icons";
 
 	public AboutUI() {
 		setResizable(false);

@@ -22,10 +22,10 @@ import com.ferrumx.ui.utilities.IconImageChooser;
 
 public class Cpu extends SwingWorker<Map<String, String>, List<String>> {
 	
-	private JLabel cpuLogo;
-	private JComboBox<String> cpuChoice;
-	private JTextArea cacheArea;
-	private List<JTextField> cpuFields;
+	private final JLabel cpuLogo;
+	private final JComboBox<String> cpuChoice;
+	private final JTextArea cacheArea;
+	private final List<JTextField> cpuFields;
 	
 	public Cpu(JLabel cpuLogo, JComboBox<String> cpuChoice, JTextArea cacheArea, List<JTextField> cpuFields) {
 		this.cpuLogo = cpuLogo;
@@ -76,8 +76,8 @@ public class Cpu extends SwingWorker<Map<String, String>, List<String>> {
 			cpuFields.get(16).setText(cpuProperties.get("L2CacheSize") + " KB");
 			cpuFields.get(17).setText(cpuProperties.get("L3CacheSize") + " KB");
 
-			cpuFields.get(8).setText(String.valueOf((Float.valueOf(cpuProperties.get("MaxClockSpeed"))
-					/ Float.valueOf(cpuProperties.get("ExtClock")))));
+			cpuFields.get(8).setText(String.valueOf((Float.parseFloat(cpuProperties.get("MaxClockSpeed"))
+					/ Float.parseFloat(cpuProperties.get("ExtClock")))));
 			
 			// set cpu logo img based on manufacturer
 			String manufacturer = cpuProperties.get("Manufacturer");
@@ -102,10 +102,10 @@ public class Cpu extends SwingWorker<Map<String, String>, List<String>> {
 
 class CpuActionListener extends SwingWorker<Map<String, String>, Void>{
 	
-	private JLabel cpuLogo;
-	private JComboBox<String> cpuChoice;
-	private JTextArea cacheArea;
-	private List<JTextField> cpuFields;
+	private final JLabel cpuLogo;
+	private final JComboBox<String> cpuChoice;
+	private final JTextArea cacheArea;
+	private final List<JTextField> cpuFields;
 	
 	public CpuActionListener (JLabel cpuLogo, JComboBox<String> cpuChoice, JTextArea cacheArea, List<JTextField> cpuFields) {
 		this.cpuLogo = cpuLogo;
@@ -144,8 +144,8 @@ class CpuActionListener extends SwingWorker<Map<String, String>, Void>{
 			cpuFields.get(16).setText(cpuProperties.get("L2CacheSize") + " KB");
 			cpuFields.get(17).setText(cpuProperties.get("L3CacheSize") + " KB");
 
-			cpuFields.get(8).setText(String.valueOf((Float.valueOf(cpuProperties.get("MaxClockSpeed"))
-					/ Float.valueOf(cpuProperties.get("ExtClock")))));
+			cpuFields.get(8).setText(String.valueOf((Float.parseFloat(cpuProperties.get("MaxClockSpeed"))
+					/ Float.parseFloat(cpuProperties.get("ExtClock")))));
 			
 			// set cpu logo img based on manufacturer
 			String manufacturer = cpuProperties.get("Manufacturer");
@@ -167,8 +167,8 @@ class CpuActionListener extends SwingWorker<Map<String, String>, Void>{
 
 class CpuCache extends SwingWorker<String, Void> {
 	
-	private String currentCpu;
-	private JTextArea cacheArea;
+	private final String currentCpu;
+	private final JTextArea cacheArea;
 	
 	public CpuCache(String cpuChoice, JTextArea cacheArea) {
 		this.currentCpu = cpuChoice;
@@ -182,8 +182,7 @@ class CpuCache extends SwingWorker<String, Void> {
 		StringBuilder cacheInfo = new StringBuilder();
 		for (String currentCacheId : cpuCacheList) {
 			Map<String, String> cpuCacheProperties = Win32_CacheMemory.getCPUCache(currentCacheId);
-			cacheInfo.append(cpuCacheProperties.get("Purpose") + ": " + cpuCacheProperties.get("InstalledSize")
-			+ " KB - " + cpuCacheProperties.get("Associativity") + " way\n");
+			cacheInfo.append(cpuCacheProperties.get("Purpose")).append(": ").append(cpuCacheProperties.get("InstalledSize")).append(" KB - ").append(cpuCacheProperties.get("Associativity")).append(" way\n");
 		}
 		return cacheInfo.toString();
 	}

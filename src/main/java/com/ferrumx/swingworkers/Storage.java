@@ -20,9 +20,9 @@ import com.ferrumx.ui.secondary.ExceptionUI;
 
 public class Storage extends SwingWorker<Map<String, String>, List<String>> {
 	
-	private JComboBox<String> storageChoice;
-	private JTextArea partitionArea;
-	private List<JTextField> storageFields;
+	private final JComboBox<String> storageChoice;
+	private final JTextArea partitionArea;
+	private final List<JTextField> storageFields;
 	
 	public Storage(JComboBox<String> storageChoice, JTextArea partitionArea, List<JTextField> storageFields) {
 		this.storageChoice = storageChoice;
@@ -62,8 +62,8 @@ public class Storage extends SwingWorker<Map<String, String>, List<String>> {
 			storageFields.get(6).setText(storageProperties.get("Status"));
 			storageFields.get(7).setText(storageProperties.get("InterfaceType"));
 			
-			Long storageCap = Long.valueOf(storageProperties.get("Size")) / (1024 * 1024 * 1024);
-			storageFields.get(2).setText((String.valueOf(storageCap) + " GB"));
+			Long storageCap = Long.parseLong(storageProperties.get("Size")) / (1024 * 1024 * 1024);
+			storageFields.get(2).setText((storageCap + " GB"));
 
 			storageChoice.addActionListener(e-> new StorageActionListener(storageChoice, partitionArea, storageFields).execute());
 		} catch (ExecutionException e) {
@@ -82,9 +82,9 @@ public class Storage extends SwingWorker<Map<String, String>, List<String>> {
 
 class StorageActionListener extends SwingWorker<Map<String, String>, Void> {
 	
-	private JComboBox<String> storageChoice;
-	private JTextArea partitionArea;
-	private List<JTextField> storageFields;
+	private final JComboBox<String> storageChoice;
+	private final JTextArea partitionArea;
+	private final List<JTextField> storageFields;
 	
 	public StorageActionListener(JComboBox<String> storageChoice, JTextArea partitionArea, List<JTextField> storageFields) {
 		this.storageChoice = storageChoice;
@@ -115,8 +115,8 @@ class StorageActionListener extends SwingWorker<Map<String, String>, Void> {
 			storageFields.get(6).setText(storageProperties.get("Status"));
 			storageFields.get(7).setText(storageProperties.get("InterfaceType"));
 			
-			Long storageCap = Long.valueOf(storageProperties.get("Size")) / (1024 * 1024 * 1024);
-			storageFields.get(2).setText((String.valueOf(storageCap) + " GB"));
+			Long storageCap = Long.parseLong(storageProperties.get("Size")) / (1024 * 1024 * 1024);
+			storageFields.get(2).setText((storageCap + " GB"));
 
 		} catch (ExecutionException e) {
 			new ExceptionUI("Storage Action Listener Error", e.getMessage()+"\nPlease refer to the logs for more information.");
@@ -134,8 +134,8 @@ class StorageActionListener extends SwingWorker<Map<String, String>, Void> {
 
 class StoragePartitions extends SwingWorker<String, Void> {
 	
-	private String currentDisk;
-	private JTextArea partitionArea;
+	private final String currentDisk;
+	private final JTextArea partitionArea;
 	
 	public StoragePartitions(String currentDisk, JTextArea partitionArea) {
 		this.currentDisk = currentDisk;
@@ -148,7 +148,7 @@ class StoragePartitions extends SwingWorker<String, Void> {
 		StringBuilder partitionsAndDriveLetters = new StringBuilder();
 		
 		for(String partition: partitionList) {
-			partitionsAndDriveLetters.append("Partition: "+ partition + ", Partition Letter: "+ Win32_LogicalDiskToPartition.getDriveLetter(partition)+"\n");
+			partitionsAndDriveLetters.append("Partition: ").append(partition).append(", Partition Letter: ").append(Win32_LogicalDiskToPartition.getDriveLetter(partition)).append("\n");
 		}
 		
 		return partitionsAndDriveLetters.toString();

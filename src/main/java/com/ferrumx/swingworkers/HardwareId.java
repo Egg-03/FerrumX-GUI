@@ -12,7 +12,7 @@ import com.ferrumx.ui.secondary.ExceptionUI;
 
 public class HardwareId extends SwingWorker<String, Void> {
 	
-	private JTextField id;
+	private final JTextField id;
 	
 	public HardwareId(JTextField id) {
 		this.id = id;

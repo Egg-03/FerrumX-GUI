@@ -5,6 +5,7 @@ import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serial;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -18,8 +19,9 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 
 public class ExceptionUI extends JFrame {
+	@Serial
 	private static final long serialVersionUID = 5951705399700376822L;
-	private JTextArea exceptionArea = new JTextArea();
+	private final JTextArea exceptionArea = new JTextArea();
 
 	public ExceptionUI(String errorName, String errorMessage) {
 		super("Crash Report Engine");

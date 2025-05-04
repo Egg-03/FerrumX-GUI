@@ -16,7 +16,7 @@ import com.ferrumx.ui.secondary.ExceptionUI;
 
 public class TimeZone extends SwingWorker<Map<String, String>, Void> {
 	
-	private List<JTextField> timeZoneFields;
+	private final List<JTextField> timeZoneFields;
 	
 	public TimeZone (List<JTextField> timeZoneFields) {
 		this.timeZoneFields = timeZoneFields;

@@ -19,9 +19,9 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class Battery extends SwingWorker<List<Map<String, String>>, Void> {
 	
-	private JLabel batteryChargePercentage;
-	private JLabel batteryChargeIcon;
-	List<JTextField> batteryFields;
+	private final JLabel batteryChargePercentage;
+	private final JLabel batteryChargeIcon;
+	final List<JTextField> batteryFields;
 	
 	public Battery(JLabel batteryChargePercentage, JLabel batteryChargeIcon, List<JTextField> batteryFields) {
 		this.batteryChargePercentage = batteryChargePercentage;
@@ -77,59 +77,38 @@ public class Battery extends SwingWorker<List<Map<String, String>>, Void> {
 	}
 	
 	private String batteryStatusInterpreter (String charge) {
-		switch (charge) {
-		case "1":
-			return "Discharging";
-		case "2":
-			return "Plugged In";
-		case "3":
-			return "Fully Charged";
-		case "4":
-			return "Low";
-		case "5":
-			return "Critical";
-		case "6":
-			return "Charging";
-		case "7":
-			return "Charging and High";
-		case "8":
-			return "Charging and Low";
-		case "9":
-			return "Charging and Critical";
-		case "10":
-			return "Undefined";
-		case "11":
-			return "Partially Charged";
-		default:
-			return charge;
-		}
+        return switch (charge) {
+            case "1" -> "Discharging";
+            case "2" -> "Plugged In";
+            case "3" -> "Fully Charged";
+            case "4" -> "Low";
+            case "5" -> "Critical";
+            case "6" -> "Charging";
+            case "7" -> "Charging and High";
+            case "8" -> "Charging and Low";
+            case "9" -> "Charging and Critical";
+            case "10" -> "Undefined";
+            case "11" -> "Partially Charged";
+            default -> charge;
+        };
 	}
 	
 	private String batteryChemistryInterpreter (String chemistry) {
-		switch (chemistry) {
-		case "1":
-			return "Other";
-		case "2":
-			return "Unknown";
-		case "3":
-			return "Lead Acid";
-		case "4":
-			return "Nickel Cadmium";
-		case "5":
-			return "Nickel MetalHydride";
-		case "6":
-			return "Lithium-ion";
-		case "7":
-			return "Zinc Air";
-		case "8":
-			return "Lithium Polymer";
-		default:
-			return chemistry;
-		}
+        return switch (chemistry) {
+            case "1" -> "Other";
+            case "2" -> "Unknown";
+            case "3" -> "Lead Acid";
+            case "4" -> "Nickel Cadmium";
+            case "5" -> "Nickel MetalHydride";
+            case "6" -> "Lithium-ion";
+            case "7" -> "Zinc Air";
+            case "8" -> "Lithium Polymer";
+            default -> chemistry;
+        };
 	}
 	
 	private void batteryImageUpdateByCharge(String currentCharge, JLabel batteryChargeIcon) {
-		Integer charge = Integer.valueOf(currentCharge);
+		int charge = Integer.parseInt(currentCharge);
 		Integer ceilCharge = Math.ceilDiv(charge,10)*10; // Round to the ceiling value of the nearest multiple of 10
 		String currentBatteryIndicator = String.valueOf(ceilCharge);
 		

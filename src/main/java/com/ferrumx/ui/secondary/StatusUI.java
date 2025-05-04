@@ -1,6 +1,7 @@
 package com.ferrumx.ui.secondary;
 
 import java.awt.Toolkit;
+import java.io.Serial;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -17,7 +18,8 @@ import javax.swing.JProgressBar;
 
 public class StatusUI extends JFrame {
 
-	private static final long serialVersionUID = 1L;
+	@Serial
+    private static final long serialVersionUID = 1L;
 
 	private JLabel hardwareLabel;
 	private JLabel cpuLabel;
