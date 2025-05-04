@@ -10,8 +10,7 @@ public class DarkTheme extends FlatDarkLaf {
 	private static final long serialVersionUID = -6544876692288901986L;
 	public static final String NAME = "DarkTheme";
 
-	@SuppressWarnings("UnusedReturnValue")
-    public static boolean setup() {
+	public static boolean setup() {
 		return setup( new DarkTheme() );
 	}
 

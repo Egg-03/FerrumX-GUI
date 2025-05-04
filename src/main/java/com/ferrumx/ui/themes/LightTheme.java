@@ -9,8 +9,7 @@ public class LightTheme extends FlatLightLaf {
 	@Serial
 	private static final long serialVersionUID = -8289157648820041582L;
 
-	@SuppressWarnings("UnusedReturnValue")
-    public static boolean setup() {
+	public static boolean setup() {
 		return setup(new LightTheme());
 	}
 	
